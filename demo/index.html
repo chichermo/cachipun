@@ -1,0 +1,1740 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <meta
+      name="description"
+      content="Cachupin PWA para pruebas de apuestas entre personas y grupos."
+    />
+    <link rel="manifest" href="/demo/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Cachupin Demo</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --surface: #111827;
+        --surface-alt: #1f2937;
+        --surface-soft: #0f172a;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --brand: #22c55e;
+        --accent: #38bdf8;
+        --border: #243248;
+        --chip: #1f2937;
+        --chip-text: #e5e7eb;
+        --warning: #fbbf24;
+        --success: #22c55e;
+        --danger: #ef4444;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        position: sticky;
+        top: 0;
+        background: rgba(11, 16, 32, 0.95);
+        border-bottom: 1px solid var(--border);
+        z-index: 5;
+        backdrop-filter: blur(8px);
+      }
+      .nav {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+      .brand-badge {
+        background: var(--brand);
+        color: #0b1020;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .nav-actions a {
+        text-decoration: none;
+        color: var(--text);
+        font-size: 14px;
+      }
+      .layout {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 16px 20px 64px;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 240px minmax(0, 1fr) 320px;
+      }
+      .left-nav,
+      .panel,
+      .right-rail {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+      }
+      .left-nav {
+        padding: 16px;
+        display: grid;
+        gap: 14px;
+        align-content: start;
+      }
+      .nav-item {
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: var(--surface-alt);
+        font-size: 13px;
+        color: var(--text);
+      }
+      .nav-item.active {
+        border: 1px solid var(--brand);
+        color: var(--brand);
+      }
+      .main {
+        display: grid;
+        gap: 16px;
+      }
+      .panel {
+        padding: 16px;
+      }
+      .panel h3 {
+        margin: 0 0 12px;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--surface-alt);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      input,
+      button,
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        background: var(--surface-soft);
+        color: var(--text);
+      }
+      button {
+        background: var(--brand);
+        color: #0b1020;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        margin-top: 12px;
+      }
+      button.secondary {
+        background: var(--surface-alt);
+        color: var(--text);
+      }
+      .market-toolbar {
+        display: grid;
+        grid-template-columns: 1fr 180px 180px;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .promo-banner {
+        background: linear-gradient(135deg, #0ea5e9, #22c55e);
+        border-radius: 14px;
+        padding: 16px;
+        color: #0b1020;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .promo-banner span {
+        font-size: 13px;
+      }
+      .promo-banner button {
+        margin-top: 0;
+        padding: 8px 12px;
+      }
+      .grid-2 {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .tab {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+      .tab.active {
+        border-color: var(--brand);
+        color: var(--brand);
+      }
+      .wizard-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 12px;
+      }
+      .wizard-controls button {
+        width: auto;
+        padding: 8px 14px;
+      }
+      .step-panel[data-hidden="true"] {
+        display: none;
+      }
+      .bet-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px;
+        background: var(--surface-alt);
+        display: grid;
+        gap: 6px;
+        margin-bottom: 10px;
+        font-size: 12px;
+      }
+      .bet-card .meta {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        color: var(--muted);
+      }
+      .badge-status {
+        background: #0b1020;
+        border: 1px solid var(--border);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        color: var(--text);
+      }
+      .payout-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        margin-top: 12px;
+      }
+      .payout-grid div {
+        background: var(--surface-alt);
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 12px;
+        border: 1px solid var(--border);
+      }
+      .market-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
+      .market-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--surface-alt);
+        display: grid;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .market-card.active {
+        border-color: var(--brand);
+        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+      }
+      .market-visual {
+        height: 70px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0ea5e9, #22c55e);
+      }
+      .market-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .market-meta span {
+        background: #0b1020;
+        border: 1px solid var(--border);
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .odds-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+      .odds-btn {
+        background: #0b1020;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 8px;
+        font-size: 12px;
+        color: var(--text);
+        text-align: center;
+      }
+      .odds-btn strong {
+        display: block;
+        color: var(--accent);
+        font-size: 13px;
+      }
+      .live-pill {
+        background: #111827;
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .right-rail {
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+        align-content: start;
+      }
+      .summary {
+        background: #0b1020;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 12px;
+        color: var(--text);
+      }
+      .metrics {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .metric-card {
+        background: var(--surface-alt);
+        border-radius: 12px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+      }
+      .metric-card strong {
+        display: block;
+        font-size: 16px;
+      }
+      .stepper {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .step {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .step.active {
+        border-color: var(--brand);
+        color: var(--brand);
+      }
+      .toast-container {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        display: grid;
+        gap: 10px;
+        z-index: 999;
+      }
+      .toast {
+        background: #111827;
+        color: var(--text);
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 12px;
+        border: 1px solid var(--border);
+      }
+      .toast.success {
+        border-color: var(--success);
+      }
+      .toast.error {
+        border-color: var(--danger);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .table th,
+      .table td {
+        border-bottom: 1px solid var(--border);
+        padding: 8px 6px;
+        text-align: left;
+      }
+      .table th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      @media (max-width: 1200px) {
+        .layout {
+          grid-template-columns: 200px minmax(0, 1fr);
+        }
+        .right-rail {
+          grid-column: 1 / -1;
+        }
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <span class="brand-badge">CP</span>
+          Cachupin · Demo PWA
+        </div>
+        <div class="nav-actions">
+          <a href="/">Landing</a>
+          <a href="/demo/legal/terminos.html">Términos</a>
+          <a href="/demo/legal/reglamento-apuestas.html">Reglamento</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="left-nav">
+        <div class="nav-item active">Deportes en vivo</div>
+        <div class="nav-item">Mercados destacados</div>
+        <div class="nav-item">Populares hoy</div>
+        <div class="nav-item">Mis apuestas</div>
+        <div class="nav-item">Promociones</div>
+        <div class="nav-item">Juego responsable</div>
+      </aside>
+
+      <main class="main">
+        <section class="panel">
+          <div class="promo-banner">
+            <div>
+              Bono de bienvenida · +20% en apuestas demo
+              <span>Válido hoy para nuevos usuarios</span>
+            </div>
+            <button class="secondary" id="promo-cta">Activar bono</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="tag">Mercados</div>
+          <h3>Elige tu evento</h3>
+          <div class="market-toolbar">
+            <input id="market-search" placeholder="Buscar partido, evento o disciplina" />
+            <select id="market-category">
+              <option value="all">Todas</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Politica">Politica</option>
+              <option value="Cultura">Cultura</option>
+              <option value="Clima">Clima</option>
+              <option value="Tecnologia">Tecnologia</option>
+            </select>
+            <select id="market-sort">
+              <option value="close">Cierre próximo</option>
+              <option value="liquidity">Mayor liquidez</option>
+              <option value="participants">Más participantes</option>
+            </select>
+          </div>
+          <div class="market-grid" id="market-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="tag">En vivo</div>
+          <h3>Mercados en vivo ahora</h3>
+          <div class="market-grid" id="live-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="tag">Flujo</div>
+          <h3>Proceso guiado</h3>
+          <div class="stepper" id="stepper">
+            <div class="step active" data-step="1">1. Selecciona mercado</div>
+            <div class="step" data-step="2">2. Crea apuesta</div>
+            <div class="step" data-step="3">3. Invita y confirma</div>
+            <div class="step" data-step="4">4. Resuelve</div>
+          </div>
+        </section>
+        <section class="panel">
+          <span class="tag">Dashboard</span>
+          <h3>Resumen general</h3>
+          <div class="metrics" id="metrics"></div>
+        </section>
+        <section class="panel">
+          <span class="tag">Onboarding</span>
+          <h3>Registro y KYC</h3>
+          <div class="grid-2">
+            <div>
+              <label>Nombre</label>
+              <input id="reg-name" value="Camila Soto" autocomplete="name" />
+            </div>
+            <div>
+              <label>Email</label>
+              <input id="reg-email" value="camila@cachupin.cl" autocomplete="email" />
+            </div>
+            <div>
+              <label>RUT</label>
+              <input id="reg-rut" value="12.345.678-9" autocomplete="off" />
+            </div>
+            <div>
+              <label>Fecha de nacimiento</label>
+              <input id="reg-dob" type="date" />
+            </div>
+          </div>
+          <button id="reg-btn">Crear cuenta (simulado)</button>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Panel personal</span>
+          <h3>Mis apuestas</h3>
+          <div id="my-bets" class="grid-2"></div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Explorar</span>
+          <h3>Apuestas por estado</h3>
+          <div class="tabs" id="bet-status-tabs">
+            <div class="tab active" data-status="publicada">Abiertas</div>
+            <div class="tab" data-status="resuelta">Resueltas</div>
+            <div class="tab" data-status="todas">Todas</div>
+          </div>
+          <div id="bet-status-list"></div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Comparativa</span>
+          <h3>Tabla de mercados</h3>
+          <table class="table" id="market-table"></table>
+        </section>
+
+        <section class="panel step-panel" data-step="2">
+          <span class="tag">Paso 1</span>
+          <h3>Crear apuesta</h3>
+          <div class="grid-2">
+            <div>
+              <label>Mercado seleccionado</label>
+              <input id="bet-market" readonly />
+            </div>
+            <div>
+              <label>Tipo</label>
+              <select id="bet-type">
+                <option>Deporte</option>
+                <option>Evento sí/no</option>
+                <option>Grupo privado</option>
+              </select>
+            </div>
+            <div>
+              <label>Descripción del evento</label>
+              <textarea id="bet-desc"></textarea>
+            </div>
+            <div>
+              <label>Fuente de resolución</label>
+              <input id="bet-source" placeholder="Fuente oficial" />
+            </div>
+            <div>
+              <label>Fecha de cierre</label>
+              <input id="bet-close" type="datetime-local" />
+            </div>
+            <div>
+              <label>Monto por participante (CLP)</label>
+              <input id="bet-amount" value="5000" />
+            </div>
+          </div>
+          <button id="bet-btn">Publicar apuesta (simulado)</button>
+          <div class="wizard-controls">
+            <button class="secondary" id="back-step-1">Volver</button>
+            <button id="next-step-2">Siguiente</button>
+          </div>
+        </section>
+
+        <section class="panel step-panel" data-step="3">
+          <span class="tag">Paso 2</span>
+          <h3>Unirse a apuesta</h3>
+          <div class="grid-2">
+            <div>
+              <label>Apuesta</label>
+              <select id="join-bet"></select>
+            </div>
+            <div>
+              <label>Resultado seleccionado</label>
+              <select id="join-pick">
+                <option>Gana Sí</option>
+                <option>Gana No</option>
+                <option>Empate</option>
+              </select>
+            </div>
+            <div>
+              <label>Invitados</label>
+              <input id="join-users" value="diego@cachupin.cl, sofi@cachupin.cl" />
+            </div>
+          </div>
+          <button id="join-btn">Confirmar ingreso</button>
+          <div class="wizard-controls">
+            <button class="secondary" id="back-step-2">Volver</button>
+            <button id="next-step-3">Siguiente</button>
+          </div>
+        </section>
+
+        <section class="panel step-panel" data-step="4">
+          <span class="tag">Paso 3</span>
+          <h3>Resolución</h3>
+          <div class="grid-2">
+            <div>
+              <label>Apuesta</label>
+              <select id="settle-bet"></select>
+            </div>
+            <div>
+              <label>Resultado final</label>
+              <select id="settle-result">
+                <option>Gana Sí</option>
+                <option>Gana No</option>
+                <option>Empate</option>
+              </select>
+            </div>
+          </div>
+          <button class="secondary" id="settle-btn">Liquidar apuesta</button>
+          <div class="wizard-controls">
+            <button class="secondary" id="back-step-3">Volver</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Admin local</span>
+          <h3>Control y disputas</h3>
+          <div class="grid-2">
+            <div>
+              <label>Usuario</label>
+              <select id="admin-user"></select>
+              <div class="row">
+                <button class="secondary" id="kyc-approve-btn">Aprobar KYC</button>
+                <button class="secondary" id="kyc-reject-btn">Rechazar KYC</button>
+              </div>
+              <button class="secondary" id="ban-toggle-btn">
+                Bloquear / Desbloquear
+              </button>
+            </div>
+            <div>
+              <label>Apuesta para disputa</label>
+              <select id="admin-bet"></select>
+              <label>Motivo</label>
+              <input id="dispute-reason" value="Resultado en revision" />
+              <div class="row">
+                <button class="secondary" id="dispute-open-btn">Abrir disputa</button>
+                <button class="secondary" id="dispute-resolve-btn">
+                  Resolver disputa
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Mis disputas</span>
+          <h3>Disputas asociadas a mis apuestas</h3>
+          <div id="my-disputes"></div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Simulador</span>
+          <h3>Simulador de payout</h3>
+          <div class="grid-2">
+            <div>
+              <label>Monto por participante (CLP)</label>
+              <input id="payout-amount" value="5000" />
+            </div>
+            <div>
+              <label>Participantes</label>
+              <input id="payout-participants" value="6" />
+            </div>
+            <div>
+              <label>Comision (%)</label>
+              <input id="payout-fee" value="5" />
+            </div>
+            <div>
+              <label>Ganadores</label>
+              <input id="payout-winners" value="2" />
+            </div>
+          </div>
+          <div class="payout-grid" id="payout-summary"></div>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Backups</span>
+          <h3>Exportar / Importar</h3>
+          <p>Guardar o cargar el estado local de pruebas.</p>
+          <div class="row">
+            <button class="secondary" id="export-btn">Exportar JSON</button>
+            <button class="secondary" id="import-btn">Importar JSON</button>
+          </div>
+          <label>Importar archivo</label>
+          <input id="import-file" type="file" accept="application/json" />
+        </section>
+
+        <section class="panel">
+          <h3>Salida de la simulación</h3>
+          <pre id="output">{}</pre>
+        </section>
+
+        <section class="panel">
+          <span class="tag">Actividad</span>
+          <h3>Registro reciente</h3>
+          <div id="audit-log"></div>
+        </section>
+
+        <div class="legal">
+          Al continuar, aceptas los
+          <a href="/demo/legal/terminos.html">términos</a>, el
+          <a href="/demo/legal/reglamento-apuestas.html">reglamento</a> y la
+          <a href="/demo/legal/privacidad.html">política de privacidad</a>.
+        </div>
+      </main>
+
+      <aside class="right-rail">
+        <div class="tag">Boleta rápida</div>
+        <div class="summary">
+          <strong>Mercado seleccionado</strong>
+          <div id="market-detail-content">Selecciona un mercado para ver detalles.</div>
+        </div>
+        <div class="summary">
+          <strong>Resumen de apuesta</strong>
+          <div id="summary-content">Selecciona un mercado para comenzar.</div>
+        </div>
+        <div class="tag">Usuario activo</div>
+        <label>Cuenta en uso</label>
+        <select id="active-user"></select>
+        <div class="summary">
+          <div><strong>Estado:</strong> <span id="active-user-status">-</span></div>
+          <div><strong>Saldo demo:</strong> <span id="active-user-balance">CLP 0</span></div>
+          <div><strong>Límite diario:</strong> <span id="active-user-limit">CLP 20.000</span></div>
+        </div>
+        <div class="tag">Acciones rápidas</div>
+        <div class="row">
+          <button class="secondary" id="state-btn">Ver estado</button>
+          <button class="secondary" id="reset-btn">Resetear</button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/demo/sw.js");
+        });
+      }
+
+      const STORE_KEY = "cachupin-demo-state";
+      const defaultState = {
+        users: [],
+        bets: [],
+        joins: [],
+        settlements: [],
+        disputes: [],
+        audit: [],
+        current_user_id: null,
+      };
+
+      const markets = [
+        {
+          id: "mkt-1",
+          category: "Deportes",
+          title: "Colo-Colo gana el clasico",
+          description: "Partido del domingo. Resultado final.",
+          source: "ANFP / marcador oficial",
+          close_at: "2026-03-20T18:00",
+          status: "abierto",
+          liquidity: 340000,
+          participants: 42,
+          confidence: 61,
+        },
+        {
+          id: "mkt-2",
+          category: "Deportes",
+          title: "La U gana su proximo partido",
+          description: "Resultado final del partido oficial.",
+          source: "ANFP / marcador oficial",
+          close_at: "2026-03-22T20:00",
+          status: "abierto",
+          liquidity: 180000,
+          participants: 28,
+          confidence: 55,
+        },
+        {
+          id: "mkt-3",
+          category: "Clima",
+          title: "Habra lluvia en Santiago el viernes",
+          description: "Reporte meteorologico oficial.",
+          source: "Direccion Meteorologica de Chile",
+          close_at: "2026-03-21T12:00",
+          status: "abierto",
+          liquidity: 120000,
+          participants: 19,
+          confidence: 48,
+        },
+        {
+          id: "mkt-4",
+          category: "Tecnologia",
+          title: "Se lanza nuevo iPhone este trimestre",
+          description: "Anuncio oficial de la marca.",
+          source: "Sitio oficial / comunicado",
+          close_at: "2026-03-30T23:00",
+          status: "abierto",
+          liquidity: 410000,
+          participants: 66,
+          confidence: 72,
+        },
+        {
+          id: "mkt-5",
+          category: "Politica",
+          title: "Proyecto X se aprueba en el Senado",
+          description: "Votacion oficial publicada.",
+          source: "Senado de Chile",
+          close_at: "2026-03-28T18:00",
+          status: "abierto",
+          liquidity: 260000,
+          participants: 33,
+          confidence: 58,
+        },
+        {
+          id: "mkt-6",
+          category: "Cultura",
+          title: "Pelicula chilena gana premio regional",
+          description: "Resultado oficial del festival.",
+          source: "Comunicado del festival",
+          close_at: "2026-04-05T22:00",
+          status: "abierto",
+          liquidity: 90000,
+          participants: 12,
+          confidence: 40,
+        },
+        {
+          id: "mkt-7",
+          category: "Politica",
+          title: "Eleccion regional se define en primera vuelta",
+          description: "Resultados oficiales Servel.",
+          source: "SERVEL",
+          close_at: "2026-04-12T20:00",
+          status: "abierto",
+          liquidity: 220000,
+          participants: 25,
+          confidence: 52,
+        },
+        {
+          id: "mkt-8",
+          category: "Clima",
+          title: "Temperatura supera 30°C en Santiago",
+          description: "Registro oficial del dia.",
+          source: "Direccion Meteorologica de Chile",
+          close_at: "2026-03-26T18:00",
+          status: "abierto",
+          liquidity: 150000,
+          participants: 20,
+          confidence: 49,
+        },
+        {
+          id: "mkt-9",
+          category: "Tecnologia",
+          title: "Empresa X anuncia nueva IA generativa",
+          description: "Comunicado oficial.",
+          source: "Sala de prensa oficial",
+          close_at: "2026-04-08T23:00",
+          status: "abierto",
+          liquidity: 300000,
+          participants: 50,
+          confidence: 67,
+        },
+        {
+          id: "mkt-10",
+          category: "Deportes",
+          title: "Chile clasifica al Mundial",
+          description: "Resultado final de eliminatorias.",
+          source: "FIFA / CONMEBOL",
+          close_at: "2026-04-30T22:00",
+          status: "abierto",
+          liquidity: 520000,
+          participants: 88,
+          confidence: 59,
+        },
+      ];
+
+      const loadState = () => {
+        try {
+          const raw = localStorage.getItem(STORE_KEY);
+          if (!raw) return { ...defaultState };
+          const parsed = JSON.parse(raw);
+          return { ...defaultState, ...parsed };
+        } catch {
+          return { ...defaultState };
+        }
+      };
+
+      const saveState = () => {
+        localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      };
+
+      const createId = () => {
+        if (crypto?.randomUUID) {
+          return crypto.randomUUID();
+        }
+        return `id-${Date.now()}-${Math.round(Math.random() * 10000)}`;
+      };
+
+      const output = document.getElementById("output");
+      const joinBetSelect = document.getElementById("join-bet");
+      const settleBetSelect = document.getElementById("settle-bet");
+      const adminUserSelect = document.getElementById("admin-user");
+      const adminBetSelect = document.getElementById("admin-bet");
+      const marketGrid = document.getElementById("market-grid");
+      const liveGrid = document.getElementById("live-grid");
+      const marketSearch = document.getElementById("market-search");
+      const marketCategory = document.getElementById("market-category");
+      const marketSort = document.getElementById("market-sort");
+      const betMarketInput = document.getElementById("bet-market");
+      const betDescInput = document.getElementById("bet-desc");
+      const betSourceInput = document.getElementById("bet-source");
+      const betCloseInput = document.getElementById("bet-close");
+      const summaryContent = document.getElementById("summary-content");
+      const marketDetailContent = document.getElementById("market-detail-content");
+      const marketTable = document.getElementById("market-table");
+      const promoCta = document.getElementById("promo-cta");
+      const activeUserSelect = document.getElementById("active-user");
+      const activeUserStatus = document.getElementById("active-user-status");
+      const activeUserBalance = document.getElementById("active-user-balance");
+      const activeUserLimit = document.getElementById("active-user-limit");
+      const myBetsContainer = document.getElementById("my-bets");
+      const auditLog = document.getElementById("audit-log");
+      const betStatusTabs = document.getElementById("bet-status-tabs");
+      const betStatusList = document.getElementById("bet-status-list");
+      const myDisputes = document.getElementById("my-disputes");
+      const metrics = document.getElementById("metrics");
+      const toastContainer = document.getElementById("toast-container");
+      const payoutAmount = document.getElementById("payout-amount");
+      const payoutParticipants = document.getElementById("payout-participants");
+      const payoutFee = document.getElementById("payout-fee");
+      const payoutWinners = document.getElementById("payout-winners");
+      const payoutSummary = document.getElementById("payout-summary");
+      const stepPanels = document.querySelectorAll(".step-panel");
+      const backStep1 = document.getElementById("back-step-1");
+      const nextStep2 = document.getElementById("next-step-2");
+      const backStep2 = document.getElementById("back-step-2");
+      const nextStep3 = document.getElementById("next-step-3");
+      const backStep3 = document.getElementById("back-step-3");
+      let state = loadState();
+      let selectedMarket = null;
+      let betStatusFilter = "publicada";
+
+      const print = (data) => {
+        output.textContent = JSON.stringify(data, null, 2);
+      };
+
+      const logAudit = (entry) => {
+        state.audit.push({ id: createId(), at: new Date().toISOString(), ...entry });
+      };
+
+      const notify = (message, type = "success") => {
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.remove();
+        }, 3200);
+      };
+
+      const renderBetSelects = () => {
+        const bets = state.bets || [];
+        const buildOptions = (select) => {
+          select.innerHTML = "";
+          if (bets.length === 0) {
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Sin apuestas disponibles";
+            select.appendChild(option);
+            select.disabled = true;
+            return;
+          }
+          select.disabled = false;
+          bets.forEach((bet) => {
+            const option = document.createElement("option");
+            option.value = bet.id;
+            option.textContent = `${bet.description} · ${bet.type}`;
+            select.appendChild(option);
+          });
+        };
+        buildOptions(joinBetSelect);
+        buildOptions(settleBetSelect);
+        buildOptions(adminBetSelect);
+      };
+
+      const renderUserSelect = () => {
+        const users = state.users || [];
+        adminUserSelect.innerHTML = "";
+        if (users.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "Sin usuarios";
+          adminUserSelect.appendChild(option);
+          adminUserSelect.disabled = true;
+          return;
+        }
+        adminUserSelect.disabled = false;
+        users.forEach((user) => {
+          const option = document.createElement("option");
+          option.value = user.id;
+          const status = user.banned ? "bloqueado" : user.kyc_status || "pendiente";
+          option.textContent = `${user.name} · ${status}`;
+          adminUserSelect.appendChild(option);
+        });
+      };
+
+      const renderActiveUser = () => {
+        const users = state.users || [];
+        activeUserSelect.innerHTML = "";
+        if (users.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "Sin usuarios";
+          activeUserSelect.appendChild(option);
+          activeUserSelect.disabled = true;
+          activeUserStatus.textContent = "-";
+          activeUserBalance.textContent = "CLP 0";
+          return;
+        }
+        activeUserSelect.disabled = false;
+        users.forEach((user) => {
+          const option = document.createElement("option");
+          option.value = user.id;
+          option.textContent = user.name;
+          activeUserSelect.appendChild(option);
+        });
+        if (!state.current_user_id) {
+          state.current_user_id = users[0]?.id || null;
+        }
+        activeUserSelect.value = state.current_user_id;
+        const active = users.find((user) => user.id === state.current_user_id);
+        if (active) {
+          activeUserStatus.textContent = active.banned
+            ? "bloqueado"
+            : active.kyc_status || "pendiente";
+          activeUserBalance.textContent = `CLP ${(active.balance || 25000).toLocaleString("es-CL")}`;
+          activeUserLimit.textContent = "CLP 20.000";
+        }
+      };
+
+      const renderMyBets = () => {
+        const activeId = state.current_user_id;
+        myBetsContainer.innerHTML = "";
+        if (!activeId) {
+          myBetsContainer.textContent = "Crea o selecciona un usuario.";
+          return;
+        }
+        const created = state.bets.filter((bet) => bet.created_by === activeId);
+        const joinedIds = state.joins
+          .filter((join) => join.user_id === activeId)
+          .map((join) => join.bet_id);
+        const joined = state.bets.filter((bet) => joinedIds.includes(bet.id));
+        const items = [
+          { title: "Creadas por mi", list: created },
+          { title: "En las que participo", list: joined },
+        ];
+        items.forEach((section) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "card";
+          wrapper.innerHTML = `<strong>${section.title}</strong>`;
+          const list = document.createElement("div");
+          list.style.marginTop = "8px";
+          if (section.list.length === 0) {
+            const empty = document.createElement("div");
+            empty.textContent = "Sin apuestas";
+            empty.style.fontSize = "12px";
+            empty.style.color = "#64748b";
+            list.appendChild(empty);
+          } else {
+            section.list.forEach((bet) => {
+              const card = document.createElement("div");
+              card.className = "bet-card";
+              card.innerHTML = `
+                <strong>${bet.description}</strong>
+                <div class="meta">
+                  <span class="badge-status">${bet.status}</span>
+                  <span>${bet.type}</span>
+                  <span>CLP ${Number(bet.amount_clp || 0).toLocaleString("es-CL")}</span>
+                </div>
+              `;
+              list.appendChild(card);
+            });
+          }
+          wrapper.appendChild(list);
+          myBetsContainer.appendChild(wrapper);
+        });
+      };
+
+      const renderMetrics = () => {
+        const totalUsers = state.users.length;
+        const totalBets = state.bets.length;
+        const openBets = state.bets.filter((bet) => bet.status === "publicada").length;
+        const resolvedBets = state.bets.filter((bet) => bet.status === "resuelta").length;
+        const totalDisputes = state.disputes.length;
+        metrics.innerHTML = `
+          <div class="metric-card"><strong>${totalUsers}</strong>Usuarios</div>
+          <div class="metric-card"><strong>${totalBets}</strong>Apuestas</div>
+          <div class="metric-card"><strong>${openBets}</strong>Abiertas</div>
+          <div class="metric-card"><strong>${resolvedBets}</strong>Resueltas</div>
+          <div class="metric-card"><strong>${totalDisputes}</strong>Disputas</div>
+        `;
+      };
+
+      const renderBetStatus = () => {
+        betStatusList.innerHTML = "";
+        let bets = state.bets || [];
+        if (betStatusFilter !== "todas") {
+          bets = bets.filter((bet) => bet.status === betStatusFilter);
+        }
+        if (bets.length === 0) {
+          betStatusList.textContent = "No hay apuestas en este estado.";
+          betStatusList.style.fontSize = "12px";
+          betStatusList.style.color = "#64748b";
+          return;
+        }
+        bets.forEach((bet) => {
+          const card = document.createElement("div");
+          card.className = "bet-card";
+          card.innerHTML = `
+            <strong>${bet.description}</strong>
+            <div class="meta">
+              <span class="badge-status">${bet.status}</span>
+              <span>${bet.type}</span>
+              <span>Cierre ${bet.close_at || "pendiente"}</span>
+            </div>
+          `;
+          betStatusList.appendChild(card);
+        });
+      };
+
+      const renderDisputes = () => {
+        const activeId = state.current_user_id;
+        myDisputes.innerHTML = "";
+        if (!activeId) {
+          myDisputes.textContent = "Selecciona un usuario para ver disputas.";
+          myDisputes.style.fontSize = "12px";
+          myDisputes.style.color = "#64748b";
+          return;
+        }
+        const userBetIds = state.bets
+          .filter((bet) => bet.created_by === activeId)
+          .map((bet) => bet.id);
+        const joinedIds = state.joins
+          .filter((join) => join.user_id === activeId)
+          .map((join) => join.bet_id);
+        const betIds = Array.from(new Set([...userBetIds, ...joinedIds]));
+        const disputes = state.disputes.filter((dispute) => betIds.includes(dispute.bet_id));
+        if (disputes.length === 0) {
+          myDisputes.textContent = "No hay disputas asociadas.";
+          myDisputes.style.fontSize = "12px";
+          myDisputes.style.color = "#64748b";
+          return;
+        }
+        disputes.forEach((dispute) => {
+          const row = document.createElement("div");
+          row.style.fontSize = "12px";
+          row.style.marginBottom = "6px";
+          row.innerHTML = `<strong>${dispute.reason}</strong> · ${dispute.status}`;
+          myDisputes.appendChild(row);
+        });
+      };
+
+      const renderPayout = () => {
+        const amount = Number(payoutAmount.value || 0);
+        const participants = Number(payoutParticipants.value || 0);
+        const fee = Number(payoutFee.value || 0);
+        const winners = Number(payoutWinners.value || 1);
+        const totalPool = amount * participants;
+        const feeValue = totalPool * (fee / 100);
+        const netPool = totalPool - feeValue;
+        const perWinner = winners > 0 ? netPool / winners : 0;
+        payoutSummary.innerHTML = `
+          <div><strong>Pozo total</strong><br/>CLP ${totalPool.toLocaleString("es-CL")}</div>
+          <div><strong>Comision</strong><br/>CLP ${feeValue.toLocaleString("es-CL")}</div>
+          <div><strong>Pozo neto</strong><br/>CLP ${netPool.toLocaleString("es-CL")}</div>
+          <div><strong>Pago por ganador</strong><br/>CLP ${perWinner.toLocaleString("es-CL")}</div>
+        `;
+      };
+
+      const renderAudit = () => {
+        const items = [...state.audit].slice(-8).reverse();
+        auditLog.innerHTML = "";
+        if (items.length === 0) {
+          auditLog.textContent = "Sin actividad reciente.";
+          auditLog.style.fontSize = "12px";
+          auditLog.style.color = "#64748b";
+          return;
+        }
+        items.forEach((item) => {
+          const row = document.createElement("div");
+          row.style.fontSize = "12px";
+          row.style.marginBottom = "6px";
+          row.textContent = `${item.at} · ${item.action}`;
+          auditLog.appendChild(row);
+        });
+      };
+
+      const renderSummary = () => {
+        if (!selectedMarket) {
+          summaryContent.textContent = "Selecciona un mercado para comenzar.";
+          marketDetailContent.textContent = "Selecciona un mercado para ver detalles.";
+          return;
+        }
+        const amount = Number(document.getElementById("bet-amount").value || 0);
+        summaryContent.innerHTML = `
+          <div><strong>Mercado:</strong> ${selectedMarket.title}</div>
+          <div><strong>Categoria:</strong> ${selectedMarket.category}</div>
+          <div><strong>Fuente:</strong> ${selectedMarket.source}</div>
+          <div><strong>Estado:</strong> ${selectedMarket.status}</div>
+          <div><strong>Monto CLP:</strong> ${amount.toLocaleString("es-CL")}</div>
+        `;
+        marketDetailContent.innerHTML = `
+          <div><strong>${selectedMarket.title}</strong></div>
+          <div>${selectedMarket.description}</div>
+          <div><strong>Liquidez:</strong> CLP ${selectedMarket.liquidity.toLocaleString("es-CL")}</div>
+          <div><strong>Participantes:</strong> ${selectedMarket.participants}</div>
+          <div><strong>Confianza:</strong> ${selectedMarket.confidence}%</div>
+        `;
+      };
+
+      const setMarket = (market) => {
+        selectedMarket = market;
+        betMarketInput.value = `${market.title} · ${market.category}`;
+        betDescInput.value = market.title;
+        betSourceInput.value = market.source;
+        betCloseInput.value = market.close_at;
+        renderSummary();
+        renderMarkets();
+        setStep(2);
+      };
+
+      const renderMarkets = () => {
+        const query = marketSearch.value.toLowerCase().trim();
+        const category = marketCategory.value;
+        let filtered = markets.filter((market) => {
+          const matchesQuery =
+            market.title.toLowerCase().includes(query) ||
+            market.description.toLowerCase().includes(query);
+          const matchesCategory = category === "all" || market.category === category;
+          return matchesQuery && matchesCategory;
+        });
+        if (marketSort.value === "liquidity") {
+          filtered = filtered.sort((a, b) => b.liquidity - a.liquidity);
+        } else if (marketSort.value === "participants") {
+          filtered = filtered.sort((a, b) => b.participants - a.participants);
+        } else {
+          filtered = filtered.sort((a, b) => a.close_at.localeCompare(b.close_at));
+        }
+        marketGrid.innerHTML = "";
+        if (filtered.length === 0) {
+          const emptyGrid = document.createElement("div");
+          emptyGrid.textContent = "No hay mercados disponibles.";
+          emptyGrid.style.fontSize = "13px";
+          emptyGrid.style.color = "#64748b";
+          marketGrid.appendChild(emptyGrid);
+          return;
+        }
+        filtered.forEach((market) => {
+          const yesOdd = (1.6 + (100 - market.confidence) / 100).toFixed(2);
+          const noOdd = (2.1 + market.confidence / 120).toFixed(2);
+          const drawOdd = (2.8).toFixed(2);
+          const card = document.createElement("div");
+          card.className = "market-card";
+          if (selectedMarket?.id === market.id) {
+            card.classList.add("active");
+          }
+          card.innerHTML = `
+            <div class="market-visual"></div>
+            <h4>${market.title}</h4>
+            <div class="market-meta">
+              <span>${market.category}</span>
+              <span>Cierre ${market.close_at.replace("T", " ")}</span>
+              <span>${market.status}</span>
+            </div>
+            <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;">
+              ${market.description}
+            </p>
+            <div class="odds-row">
+              <div class="odds-btn"><strong>${yesOdd}</strong>Sí</div>
+              <div class="odds-btn"><strong>${drawOdd}</strong>Empate</div>
+              <div class="odds-btn"><strong>${noOdd}</strong>No</div>
+            </div>
+          `;
+          card.onclick = () => setMarket(market);
+          marketGrid.appendChild(card);
+        });
+      };
+
+      const renderLive = () => {
+        const live = markets.slice(0, 3);
+        liveGrid.innerHTML = "";
+        live.forEach((market) => {
+          const yesOdd = (1.7 + (100 - market.confidence) / 100).toFixed(2);
+          const noOdd = (2.2 + market.confidence / 120).toFixed(2);
+          const card = document.createElement("div");
+          card.className = "market-card";
+          card.innerHTML = `
+            <div class="market-visual"></div>
+            <div class="market-meta">
+              <span>${market.category}</span>
+              <span class="live-pill">EN VIVO</span>
+            </div>
+            <h4>${market.title}</h4>
+            <div class="odds-row">
+              <div class="odds-btn"><strong>${yesOdd}</strong>Sí</div>
+              <div class="odds-btn"><strong>${noOdd}</strong>No</div>
+              <div class="odds-btn"><strong>1.90</strong>Cashout</div>
+            </div>
+          `;
+          card.onclick = () => setMarket(market);
+          liveGrid.appendChild(card);
+        });
+      };
+
+      const renderMarketTable = () => {
+        const rows = markets
+          .slice(0, 6)
+          .map(
+            (market) => `
+              <tr>
+                <td>${market.title}</td>
+                <td>${market.category}</td>
+                <td>CLP ${market.liquidity.toLocaleString("es-CL")}</td>
+                <td>${market.participants}</td>
+                <td>${market.status}</td>
+              </tr>
+            `
+          )
+          .join("");
+        marketTable.innerHTML = `
+          <thead>
+            <tr>
+              <th>Mercado</th>
+              <th>Categoria</th>
+              <th>Liquidez</th>
+              <th>Participantes</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        `;
+      };
+
+      marketSearch.addEventListener("input", renderMarkets);
+      marketCategory.addEventListener("change", renderMarkets);
+      marketSort.addEventListener("change", renderMarkets);
+
+      promoCta.addEventListener("click", () => {
+        notify("Bono demo activado", "success");
+      });
+
+      renderMarkets();
+      renderLive();
+      renderMarketTable();
+      renderBetSelects();
+      renderUserSelect();
+      renderActiveUser();
+      renderSummary();
+      renderMyBets();
+      renderAudit();
+      renderBetStatus();
+      renderDisputes();
+      renderPayout();
+      renderMetrics();
+
+      const setStep = (step) => {
+        const steps = document.querySelectorAll(".stepper .step");
+        steps.forEach((item) => {
+          item.classList.toggle("active", Number(item.dataset.step) === step);
+        });
+        stepPanels.forEach((panel) => {
+          const panelStep = Number(panel.dataset.step);
+          panel.dataset.hidden = panelStep !== step;
+        });
+      };
+
+      const validateStep2 = () => {
+        if (!selectedMarket) {
+          notify("Selecciona un mercado antes de crear la apuesta", "error");
+          return false;
+        }
+        if (!betDescInput.value.trim()) {
+          notify("Ingresa la descripcion del evento", "error");
+          return false;
+        }
+        return true;
+      };
+
+      const validateStep3 = () => {
+        if (!joinBetSelect.value) {
+          notify("Selecciona una apuesta para unirte", "error");
+          return false;
+        }
+        return true;
+      };
+
+      setStep(1);
+
+      activeUserSelect.addEventListener("change", (event) => {
+        state.current_user_id = event.target.value;
+        saveState();
+        renderActiveUser();
+        renderMyBets();
+        renderDisputes();
+        renderMetrics();
+      });
+
+      betStatusTabs.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          betStatusTabs.querySelectorAll(".tab").forEach((item) => item.classList.remove("active"));
+          tab.classList.add("active");
+          betStatusFilter = tab.dataset.status;
+          renderBetStatus();
+        });
+      });
+
+      [payoutAmount, payoutParticipants, payoutFee, payoutWinners].forEach((input) => {
+        input.addEventListener("input", renderPayout);
+      });
+
+      backStep1.addEventListener("click", () => setStep(1));
+      backStep2.addEventListener("click", () => setStep(2));
+      backStep3.addEventListener("click", () => setStep(3));
+      nextStep2.addEventListener("click", () => {
+        if (validateStep2()) {
+          setStep(3);
+        }
+      });
+      nextStep3.addEventListener("click", () => {
+        if (validateStep3()) {
+          setStep(4);
+        }
+      });
+
+      document.getElementById("reg-btn").onclick = () => {
+        const user = {
+          id: createId(),
+          name: document.getElementById("reg-name").value,
+          email: document.getElementById("reg-email").value,
+          rut: document.getElementById("reg-rut").value,
+          dob: document.getElementById("reg-dob").value || "no informado",
+          status: "pendiente",
+          kyc: "requerido",
+          kyc_status: "pendiente",
+          banned: false,
+          balance: 25000,
+          created_at: new Date().toISOString(),
+        };
+        state.users.push(user);
+        logAudit({ action: "registro", user_id: user.id });
+        if (!state.current_user_id) {
+          state.current_user_id = user.id;
+        }
+        saveState();
+        renderUserSelect();
+        renderActiveUser();
+        renderMyBets();
+        renderAudit();
+        renderDisputes();
+        renderBetStatus();
+        renderMetrics();
+        print({ status: "pendiente", action: "registro", kyc: "requerido", user });
+        notify("Cuenta creada", "success");
+      };
+
+      document.getElementById("bet-btn").onclick = () => {
+        const bet = {
+          id: createId(),
+          status: "publicada",
+          type: document.getElementById("bet-type").value,
+          description: document.getElementById("bet-desc").value,
+          close_at: document.getElementById("bet-close").value || "pendiente",
+          amount_clp: Number(document.getElementById("bet-amount").value || 0),
+          custody: "fondos en custodia hasta resolución",
+          market_id: selectedMarket?.id || null,
+          source: document.getElementById("bet-source").value || "No informada",
+          created_by: state.current_user_id,
+          created_at: new Date().toISOString(),
+        };
+        state.bets.push(bet);
+        logAudit({ action: "crear_apuesta", bet_id: bet.id });
+        saveState();
+        renderBetSelects();
+        renderMyBets();
+        renderAudit();
+        renderBetStatus();
+        renderMetrics();
+        setStep(3);
+        print({ status: "publicada", action: "crear_apuesta", bet });
+        notify("Apuesta publicada", "success");
+      };
+
+      document.getElementById("join-btn").onclick = () => {
+        const betId = joinBetSelect.value;
+        const invited = document
+          .getElementById("join-users")
+          .value.split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+        const join = {
+          id: createId(),
+          bet_id: betId,
+          invited,
+          pick: document.getElementById("join-pick").value,
+          limits: "aplica control de juego responsable",
+          user_id: state.current_user_id,
+          created_at: new Date().toISOString(),
+        };
+        state.joins.push(join);
+        logAudit({ action: "unirse", bet_id: betId, join_id: join.id });
+        saveState();
+        renderMyBets();
+        renderAudit();
+        renderBetStatus();
+        renderMetrics();
+        setStep(4);
+        print({ status: "confirmada", action: "unirse", join });
+        notify("Ingreso confirmado", "success");
+      };
+
+      document.getElementById("settle-btn").onclick = () => {
+        const betId = settleBetSelect.value;
+        const result = document.getElementById("settle-result").value;
+        const settlement = {
+          id: createId(),
+          bet_id: betId,
+          result,
+          payout: "se distribuye a ganadores luego de verificación",
+          dispute_window: "24h para reclamos",
+          settled_at: new Date().toISOString(),
+        };
+        state.settlements.push(settlement);
+        state.bets = state.bets.map((bet) =>
+          bet.id === betId ? { ...bet, status: "resuelta", result } : bet
+        );
+        logAudit({ action: "resolver", bet_id: betId, settlement_id: settlement.id });
+        saveState();
+        renderBetSelects();
+        renderMyBets();
+        renderAudit();
+        renderBetStatus();
+        renderMetrics();
+        setStep(1);
+        print({ status: "liquidada", action: "resolver", settlement });
+        notify("Apuesta resuelta", "success");
+      };
+
+      document.getElementById("state-btn").onclick = () => {
+        print({ status: "estado", action: "leer_estado", state });
+      };
+
+      document.getElementById("reset-btn").onclick = () => {
+        state = { ...defaultState };
+        saveState();
+        renderBetSelects();
+        renderUserSelect();
+        renderActiveUser();
+        renderSummary();
+        renderMyBets();
+        renderAudit();
+        renderBetStatus();
+        renderDisputes();
+        renderPayout();
+        renderMetrics();
+        setStep(1);
+        print({ status: "reset", action: "reiniciar_demo" });
+        notify("Demo reiniciada", "success");
+      };
+
+      document.getElementById("kyc-approve-btn").onclick = () => {
+        const userId = adminUserSelect.value;
+        state.users = state.users.map((user) =>
+          user.id === userId ? { ...user, kyc_status: "aprobado" } : user
+        );
+        logAudit({ action: "kyc_aprobado", user_id: userId });
+        saveState();
+        renderUserSelect();
+        renderActiveUser();
+        renderAudit();
+        renderMetrics();
+        print({ status: "ok", action: "kyc_aprobado", user_id: userId });
+        notify("KYC aprobado", "success");
+      };
+
+      document.getElementById("kyc-reject-btn").onclick = () => {
+        const userId = adminUserSelect.value;
+        state.users = state.users.map((user) =>
+          user.id === userId ? { ...user, kyc_status: "rechazado" } : user
+        );
+        logAudit({ action: "kyc_rechazado", user_id: userId });
+        saveState();
+        renderUserSelect();
+        renderActiveUser();
+        renderAudit();
+        renderMetrics();
+        print({ status: "ok", action: "kyc_rechazado", user_id: userId });
+        notify("KYC rechazado", "error");
+      };
+
+      document.getElementById("ban-toggle-btn").onclick = () => {
+        const userId = adminUserSelect.value;
+        state.users = state.users.map((user) =>
+          user.id === userId ? { ...user, banned: !user.banned } : user
+        );
+        const updated = state.users.find((user) => user.id === userId);
+        logAudit({ action: updated?.banned ? "bloquear" : "desbloquear", user_id: userId });
+        saveState();
+        renderUserSelect();
+        renderActiveUser();
+        renderAudit();
+        renderMetrics();
+        print({ status: "ok", action: "ban_toggle", user_id: userId, banned: updated?.banned });
+        notify(updated?.banned ? "Usuario bloqueado" : "Usuario desbloqueado", "success");
+      };
+
+      document.getElementById("dispute-open-btn").onclick = () => {
+        const betId = adminBetSelect.value;
+        const reason = document.getElementById("dispute-reason").value;
+        const dispute = {
+          id: createId(),
+          bet_id: betId,
+          reason,
+          status: "abierta",
+          opened_at: new Date().toISOString(),
+        };
+        state.disputes.push(dispute);
+        logAudit({ action: "abrir_disputa", bet_id: betId, dispute_id: dispute.id });
+        saveState();
+        renderAudit();
+        print({ status: "ok", action: "abrir_disputa", dispute });
+        renderDisputes();
+        renderMetrics();
+        notify("Disputa abierta", "success");
+      };
+
+      document.getElementById("dispute-resolve-btn").onclick = () => {
+        const betId = adminBetSelect.value;
+        let resolved = null;
+        state.disputes = state.disputes.map((dispute) => {
+          if (dispute.bet_id === betId && dispute.status === "abierta") {
+            resolved = { ...dispute, status: "resuelta", resolved_at: new Date().toISOString() };
+            return resolved;
+          }
+          return dispute;
+        });
+        if (resolved) {
+          logAudit({ action: "resolver_disputa", bet_id: betId, dispute_id: resolved.id });
+          saveState();
+          renderAudit();
+          renderDisputes();
+          renderMetrics();
+          print({ status: "ok", action: "resolver_disputa", dispute: resolved });
+          notify("Disputa resuelta", "success");
+          return;
+        }
+        print({ status: "sin_disputa", action: "resolver_disputa", bet_id: betId });
+        notify("No hay disputa abierta", "error");
+      };
+
+      document.getElementById("export-btn").onclick = () => {
+        const blob = new Blob([JSON.stringify(state, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "cachupin-demo-state.json";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        print({ status: "ok", action: "exportar_json" });
+        notify("Estado exportado", "success");
+      };
+
+      document.getElementById("import-btn").onclick = async () => {
+        const file = document.getElementById("import-file").files[0];
+        if (!file) {
+          print({ status: "error", action: "importar_json", message: "sin archivo" });
+          notify("Selecciona un archivo JSON", "error");
+          return;
+        }
+        try {
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          const nextState = { ...defaultState, ...parsed };
+          state = nextState;
+          saveState();
+          renderBetSelects();
+          renderUserSelect();
+          renderActiveUser();
+          renderSummary();
+          renderMyBets();
+          renderAudit();
+          renderBetStatus();
+          renderDisputes();
+          renderPayout();
+          renderMetrics();
+          print({ status: "ok", action: "importar_json", state });
+          notify("Estado importado", "success");
+        } catch (error) {
+          print({ status: "error", action: "importar_json", message: error.message });
+          notify("Error al importar JSON", "error");
+        }
+      };
+
+      document.getElementById("bet-amount").addEventListener("input", renderSummary);
+    </script>
+  </body>
+</html>

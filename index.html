@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cachupin</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        background: rgba(248, 250, 252, 0.95);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid #e2e8f0;
+        z-index: 5;
+      }
+      .nav {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+      }
+      .brand-badge {
+        background: #0f766e;
+        color: #fff;
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .nav-links a {
+        color: #0f172a;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .hero {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 64px 24px 32px;
+        display: grid;
+        gap: 32px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        align-items: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 42px;
+        margin: 16px 0 10px;
+      }
+      p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #334155;
+      }
+      .hero-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+      .stats {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        margin-top: 18px;
+      }
+      .stat {
+        background: #f1f5f9;
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .stat strong {
+        font-size: 20px;
+        display: block;
+      }
+      .cta {
+        margin-top: 20px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .button {
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: 0;
+        background: #0f766e;
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .button.secondary {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      .section {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 24px;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      }
+      .pill {
+        display: inline-block;
+        background: #e0f2fe;
+        color: #0369a1;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+      }
+      .steps {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .step {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+      }
+      .footer {
+        max-width: 1100px;
+        margin: 0 auto 48px;
+        padding: 0 24px 24px;
+        font-size: 14px;
+        color: #64748b;
+      }
+      .links {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .links a {
+        color: #0f172a;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      code {
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <span class="brand-badge">CP</span>
+          Cachupin
+        </div>
+        <nav class="nav-links">
+          <a href="/demo">Demo PWA</a>
+          <a href="/demo/legal/terminos.html">Términos</a>
+          <a href="/demo/legal/reglamento-apuestas.html">Reglamento</a>
+          <a href="/demo/legal/juego-responsable.html">Juego responsable</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="badge">Lanzamiento Chile · Piloto privado</span>
+        <h1>Apuestas entre personas, con reglas claras y control total</h1>
+        <p>
+          Cachupin es una plataforma de apuestas P2P y grupales con mercados
+          deportivos y eventos tipo sí/no. Enfocada en transparencia, cumplimiento
+          y experiencia simple para crear, aceptar y resolver apuestas.
+        </p>
+        <div class="cta">
+          <a class="button" href="/demo">Entrar a la demo</a>
+          <a class="button secondary" href="/demo/legal/terminos.html">
+            Ver términos
+          </a>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong>+8</strong>
+            Categorías de mercados
+          </div>
+          <div class="stat">
+            <strong>KYC</strong>
+            Verificación obligatoria
+          </div>
+          <div class="stat">
+            <strong>24h</strong>
+            Ventana de reclamos
+          </div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>Seguridad y cumplimiento</h3>
+        <p>
+          Custodia de fondos, límites de apuesta, monitoreo antifraude y
+          documentación legal completa para operar conforme a la normativa local.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <span class="pill">Compliance</span>
+            <strong>KYC + AML</strong>
+            <p>Flujos de verificación y monitoreo continuo.</p>
+          </div>
+          <div class="card">
+            <span class="pill">Protección</span>
+            <strong>Juego responsable</strong>
+            <p>Límites, autoexclusión y alertas de riesgo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Qué puedes hacer en Cachupin</h2>
+      <div class="grid">
+        <div class="card">
+          <strong>Apuestas entre pares</strong>
+          <p>Invita a tus contactos o crea grupos privados.</p>
+        </div>
+        <div class="card">
+          <strong>Mercados múltiples</strong>
+          <p>Deportes, política, clima, tecnología, cultura y más.</p>
+        </div>
+        <div class="card">
+          <strong>Resolución transparente</strong>
+          <p>Fuentes públicas y ventana de disputa controlada.</p>
+        </div>
+        <div class="card">
+          <strong>Custodia segura</strong>
+          <p>Fondos en custodia hasta resolución del evento.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Flujo simple en 3 pasos</h2>
+      <div class="steps">
+        <div class="step">
+          <strong>1. Crea o elige un mercado</strong>
+          <p>Selecciona evento, monto y reglas claras.</p>
+        </div>
+        <div class="step">
+          <strong>2. Invita participantes</strong>
+          <p>Aceptan la apuesta con un clic.</p>
+        </div>
+        <div class="step">
+          <strong>3. Resolución y pago</strong>
+          <p>Se liquida con base en fuente oficial.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Documentación legal</h2>
+      <div class="links">
+        <a href="/demo/legal/terminos.html">Términos y condiciones</a>
+        <a href="/demo/legal/privacidad.html">Política de privacidad</a>
+        <a href="/demo/legal/reglamento-apuestas.html">Reglamento de apuestas</a>
+        <a href="/demo/legal/kyc-aml.html">KYC & AML</a>
+        <a href="/demo/legal/juego-responsable.html">Juego responsable</a>
+        <a href="/demo/legal/uso-prohibido.html">Uso prohibido</a>
+      </div>
+    </section>
+
+    <div class="footer">
+      Documentación legal disponible en <code>/demo/legal/*</code>. Esta información
+      es un borrador operativo y debe ser revisada por asesoría legal local antes de
+      operar.
+    </div>
+  </body>
+</html>
