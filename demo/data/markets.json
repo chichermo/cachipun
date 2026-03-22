@@ -59,9 +59,7 @@
     "liquidity": 240000,
     "participants": 36,
     "confidence": 57,
-    "icon": "/demo/assets/icons/ball.svg",
-    "homeLogo": "/demo/assets/logos/team-bos.svg",
-    "awayLogo": "/demo/assets/logos/team-gsw.svg"
+    "icon": "/demo/assets/icons/ball.svg"
   },
   {
     "id": "mkt-5",

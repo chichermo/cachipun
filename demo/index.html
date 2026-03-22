@@ -2084,6 +2084,12 @@
         "Cricket": "Cricket",
       };
 
+      const useCorsProxy = location.hostname.includes("vercel.app");
+      const buildSportsDbUrl = (path) =>
+        useCorsProxy
+          ? `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://www.thesportsdb.com/api/v1/json/3/${path}`)}`
+          : `/api/logos/${path}`;
+
       const fetchTeamLogo = async (teamName) => {
         if (!teamName) return "";
         if (teamLogoCache.has(teamName)) return teamLogoCache.get(teamName);
@@ -2093,10 +2099,16 @@
           return cached;
         }
         try {
-          const res = await fetch(`/api/logos/team?name=${encodeURIComponent(teamName)}`);
+          const res = await fetch(
+            useCorsProxy
+              ? buildSportsDbUrl(`searchteams.php?t=${encodeURIComponent(teamName)}`)
+              : `/api/logos/team?name=${encodeURIComponent(teamName)}`
+          );
           if (!res.ok) return "";
           const data = await res.json();
-          const logo = data?.logo || "";
+          const logo = useCorsProxy
+            ? data?.teams?.[0]?.strTeamBadge || data?.teams?.[0]?.strTeamLogo || ""
+            : data?.logo || "";
           teamLogoCache.set(teamName, logo || "");
           if (logo) setCachedLogo(`team:${teamName}`, logo);
           return logo || "";
@@ -2114,10 +2126,14 @@
           return cached;
         }
         try {
-          const res = await fetch(`/api/logos/league?name=${encodeURIComponent(leagueName)}`);
+          const res = await fetch(
+            useCorsProxy
+              ? buildSportsDbUrl(`search_all_leagues.php?l=${encodeURIComponent(leagueName)}`)
+              : `/api/logos/league?name=${encodeURIComponent(leagueName)}`
+          );
           if (!res.ok) return "";
           const data = await res.json();
-          const logo = data?.logo || "";
+          const logo = useCorsProxy ? data?.countries?.[0]?.strBadge || data?.countries?.[0]?.strLogo || "" : data?.logo || "";
           leagueLogoCache.set(leagueName, logo || "");
           if (logo) setCachedLogo(`league:${leagueName}`, logo);
           return logo || "";
@@ -2136,10 +2152,18 @@
           return cached;
         }
         try {
-          const res = await fetch(`/api/logos/sport?name=${encodeURIComponent(sportName)}`);
+          const res = await fetch(
+            useCorsProxy
+              ? buildSportsDbUrl("all_sports.php")
+              : `/api/logos/sport?name=${encodeURIComponent(sportName)}`
+          );
           if (!res.ok) return "";
           const data = await res.json();
-          const icon = data?.logo || "";
+          const icon = useCorsProxy
+            ? (data?.sports || []).find((item) => item.strSport === sportName)?.strSportThumb ||
+              (data?.sports || []).find((item) => item.strSport === sportName)?.strSportIconGreen ||
+              ""
+            : data?.logo || "";
           sportIconCache.set(sportName, icon || "");
           if (icon) setCachedLogo(`sport:${sportName}`, icon);
           return icon || "";
@@ -2171,34 +2195,28 @@
 
       const applyDynamicLogos = async () => {
         const teamImgs = Array.from(document.querySelectorAll("img[data-team]"));
-        await Promise.all(
-          teamImgs.map(async (img) => {
-            const team = img.dataset.team;
-            if (!team) return;
-            const logo = await fetchTeamLogo(team);
-            if (logo) img.src = logo;
-          })
-        );
+        for (const img of teamImgs) {
+          const team = img.dataset.team;
+          if (!team) continue;
+          const logo = await fetchTeamLogo(team);
+          if (logo) img.src = logo;
+        }
 
         const leagueImgs = Array.from(document.querySelectorAll("img[data-league]"));
-        await Promise.all(
-          leagueImgs.map(async (img) => {
-            const league = img.dataset.league;
-            if (!league) return;
-            const logo = await fetchLeagueLogo(league);
-            if (logo) img.src = logo;
-          })
-        );
+        for (const img of leagueImgs) {
+          const league = img.dataset.league;
+          if (!league) continue;
+          const logo = await fetchLeagueLogo(league);
+          if (logo) img.src = logo;
+        }
 
         const categoryImgs = Array.from(document.querySelectorAll("img[data-category]"));
-        await Promise.all(
-          categoryImgs.map(async (img) => {
-            const category = img.dataset.category;
-            if (!category) return;
-            const icon = await fetchSportIcon(category);
-            if (icon) img.src = icon;
-          })
-        );
+        for (const img of categoryImgs) {
+          const category = img.dataset.category;
+          if (!category) continue;
+          const icon = await fetchSportIcon(category);
+          if (icon) img.src = icon;
+        }
       };
 
       const getMatchSides = (title) => {
