@@ -311,6 +311,37 @@
       .promo-carousel .banner-card {
         scroll-snap-align: start;
       }
+      .carousel-controls {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+      .carousel-btn {
+        width: auto;
+        padding: 6px 10px;
+        border-radius: 10px;
+        background: #0b1220;
+        border: 1px solid var(--border);
+        color: #cbd5f5;
+        font-size: 12px;
+      }
+      .carousel-dots {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #1f2937;
+        border: 1px solid var(--border);
+      }
+      .carousel-dot.active {
+        background: var(--brand);
+        border-color: transparent;
+      }
       .banner-card {
         background: var(--surface-alt);
         border: 1px solid var(--border);
@@ -563,6 +594,14 @@
         border-radius: 8px;
         background: var(--surface-soft);
         border: 1px solid var(--border);
+      }
+      .league-tile .meta {
+        display: grid;
+        gap: 4px;
+      }
+      .league-tile .meta span {
+        font-size: 11px;
+        color: var(--muted);
       }
       .market-meta {
         display: flex;
@@ -1261,6 +1300,13 @@
           <span class="tag">Banners</span>
           <h3>Promociones y anuncios</h3>
           <div class="banner-grid promo-carousel" id="banner-grid"></div>
+          <div class="carousel-controls">
+            <div class="carousel-dots" id="promo-dots"></div>
+            <div>
+              <button class="carousel-btn" id="promo-prev">◀</button>
+              <button class="carousel-btn" id="promo-next">▶</button>
+            </div>
+          </div>
         </section>
 
         <section class="panel" data-section="news">
@@ -1893,6 +1939,9 @@
       const sportsGrid = document.getElementById("sports-grid");
       const standingsTable = document.getElementById("standings-table");
       const topLeagues = document.getElementById("top-leagues");
+      const promoDots = document.getElementById("promo-dots");
+      const promoPrev = document.getElementById("promo-prev");
+      const promoNext = document.getElementById("promo-next");
       const betMarketInput = document.getElementById("bet-market");
       const betDescInput = document.getElementById("bet-desc");
       const betSourceInput = document.getElementById("bet-source");
@@ -2561,9 +2610,10 @@
           tile.className = "league-tile";
           tile.innerHTML = `
             <img src="${league.logo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
-            <div>
+            <div class="meta">
               <strong>${league.name}</strong>
-              <div style="font-size:12px;color:#9ca3af;">${league.count} mercados</div>
+              <span>${league.count} mercados</span>
+              <span>${fixturesData.filter((item) => item.league === league.name).length} fixtures</span>
             </div>
           `;
           tile.onclick = () => {
@@ -2577,6 +2627,16 @@
             renderStandings();
           };
           topLeagues.appendChild(tile);
+        });
+      };
+
+      const renderPromoDots = () => {
+        if (!promoDots) return;
+        promoDots.innerHTML = "";
+        bannersData.forEach((_, idx) => {
+          const dot = document.createElement("div");
+          dot.className = `carousel-dot ${idx === 0 ? "active" : ""}`;
+          promoDots.appendChild(dot);
         });
       };
 
@@ -3171,6 +3231,7 @@
           `;
           bannerGrid.appendChild(card);
         });
+        renderPromoDots();
       };
 
       const renderNews = () => {
@@ -3252,6 +3313,14 @@
       promoCta.addEventListener("click", () => {
         notify("Promociones cargadas", "success");
       });
+      if (promoPrev && promoNext) {
+        promoPrev.addEventListener("click", () => {
+          bannerGrid?.scrollBy({ left: -260, behavior: "smooth" });
+        });
+        promoNext.addEventListener("click", () => {
+          bannerGrid?.scrollBy({ left: 260, behavior: "smooth" });
+        });
+      }
       btnDeposit.addEventListener("click", () => {
         const active = state.users.find((user) => user.id === state.current_user_id);
         if (active) {
