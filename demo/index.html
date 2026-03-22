@@ -161,21 +161,35 @@
         z-index: 10;
         max-height: calc(100vh - 120px);
         overflow: auto;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98));
+      }
+      .nav-title {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #cbd5f5;
+        font-weight: 700;
       }
       .nav-item {
         padding: 10px 12px;
         border-radius: 10px;
-        background: var(--surface-alt);
+        background: #0b1220;
         font-size: 13px;
-        color: var(--text);
+        color: #f8fafc;
         cursor: pointer;
         width: 100%;
         text-align: left;
-        border: 1px solid transparent;
+        border: 1px solid #1f2937;
+        font-weight: 600;
+      }
+      .nav-item:hover {
+        border-color: rgba(34, 197, 94, 0.6);
       }
       .nav-item.active {
-        border: 1px solid var(--brand);
-        color: var(--brand);
+        border: 1px solid transparent;
+        color: #0b1020;
+        background: linear-gradient(135deg, #22c55e, #38bdf8);
+        box-shadow: 0 10px 20px rgba(34, 197, 94, 0.25);
       }
       .nav-item:focus {
         outline: 2px solid var(--accent);
@@ -633,12 +647,41 @@
         justify-content: space-between;
         padding: 8px 10px;
         border-radius: 10px;
-        background: var(--surface-alt);
+        background: #0b1220;
         border: 1px solid var(--border);
         font-size: 12px;
+        color: #f8fafc;
       }
       .league-item span {
         color: var(--muted);
+      }
+      @media (max-width: 1200px) {
+        .layout {
+          grid-template-columns: 200px minmax(0, 1fr);
+        }
+        .right-rail {
+          display: none;
+        }
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .left-nav {
+          position: static;
+          max-height: none;
+          overflow: visible;
+        }
+        .league-list {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          padding-bottom: 6px;
+        }
+        .league-item {
+          min-width: 160px;
+          flex: 0 0 auto;
+        }
       }
       .quick-filters {
         display: flex;
@@ -794,6 +837,7 @@
 
     <div class="layout">
       <aside class="left-nav">
+        <div class="nav-title">Navegación</div>
         <button class="nav-item active" data-section="markets" type="button">Mercados</button>
         <button class="nav-item" data-section="live" type="button">En vivo</button>
         <button class="nav-item" data-section="fixtures" type="button">Fixtures</button>
@@ -802,7 +846,7 @@
         <button class="nav-item" data-section="promos" type="button">Promociones</button>
         <button class="nav-item" data-section="news" type="button">Noticias</button>
         <button class="nav-item" data-section="responsable" type="button">Juego responsable</button>
-        <div class="tag">Ligas populares</div>
+        <div class="nav-title">Ligas populares</div>
         <div class="league-list" id="league-list"></div>
       </aside>
 
@@ -848,6 +892,10 @@
             <div class="filter-chip" data-category="Economía">Economía</div>
             <div class="filter-chip" data-category="Cripto">Cripto</div>
             <div class="filter-chip" data-category="Ciencia">Ciencia</div>
+            <div class="filter-chip" data-category="Salud">Salud</div>
+            <div class="filter-chip" data-category="Geopolítica">Geopolítica</div>
+            <div class="filter-chip" data-category="Empresas">Empresas</div>
+            <div class="filter-chip" data-category="Energía">Energía</div>
             <div class="filter-chip" data-category="Clima">Clima</div>
             <div class="filter-chip" data-category="Tecnología">Tecnología</div>
             <div class="filter-chip" data-category="Cultura">Cultura</div>
@@ -877,6 +925,10 @@
               <option value="Economía">Economía</option>
               <option value="Cripto">Cripto</option>
               <option value="Ciencia">Ciencia</option>
+              <option value="Salud">Salud</option>
+              <option value="Geopolítica">Geopolítica</option>
+              <option value="Empresas">Empresas</option>
+              <option value="Energía">Energía</option>
               <option value="Clima">Clima</option>
               <option value="Tecnología">Tecnología</option>
               <option value="Cultura">Cultura</option>
@@ -1496,6 +1548,58 @@
           liquidity: 130000,
           participants: 19,
           confidence: 46,
+        },
+        {
+          id: "mkt-15",
+          category: "Salud",
+          league: "Global",
+          title: "Se aprueba nueva vacuna estacional",
+          description: "Comunicado oficial de organismo regulador.",
+          source: "Organismo sanitario",
+          close_at: "2026-04-18T10:00",
+          status: "abierto",
+          liquidity: 170000,
+          participants: 23,
+          confidence: 48,
+        },
+        {
+          id: "mkt-16",
+          category: "Geopolítica",
+          league: "Global",
+          title: "Se firma acuerdo comercial regional",
+          description: "Anuncio oficial entre países.",
+          source: "Comunicado conjunto",
+          close_at: "2026-04-20T18:00",
+          status: "abierto",
+          liquidity: 190000,
+          participants: 28,
+          confidence: 50,
+        },
+        {
+          id: "mkt-17",
+          category: "Empresas",
+          league: "Global",
+          title: "Empresa X anuncia recompra de acciones",
+          description: "Reporte financiero oficial.",
+          source: "Hecho esencial",
+          close_at: "2026-04-22T22:00",
+          status: "abierto",
+          liquidity: 210000,
+          participants: 31,
+          confidence: 52,
+        },
+        {
+          id: "mkt-18",
+          category: "Energía",
+          league: "Global",
+          title: "Precio del Brent supera USD 100",
+          description: "Cierre oficial del mercado.",
+          source: "Indice energético",
+          close_at: "2026-04-25T23:00",
+          status: "abierto",
+          liquidity: 260000,
+          participants: 35,
+          confidence: 54,
         },
       ];
       const fallbackLive = [
