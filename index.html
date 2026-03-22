@@ -6,7 +6,16 @@
     <title>Cachupin</title>
     <style>
       :root {
-        color-scheme: light;
+        color-scheme: dark;
+        --bg: #0b1020;
+        --surface: #111827;
+        --surface-alt: #1f2937;
+        --surface-soft: #0f172a;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --brand: #22c55e;
+        --accent: #38bdf8;
+        --border: #1f2937;
       }
       * {
         box-sizing: border-box;
@@ -14,15 +23,15 @@
       body {
         margin: 0;
         font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-        background: #f8fafc;
-        color: #0f172a;
+        background: radial-gradient(circle at top, #162032, var(--bg) 50%);
+        color: var(--text);
       }
       header {
         position: sticky;
         top: 0;
-        background: rgba(248, 250, 252, 0.95);
+        background: rgba(11, 16, 32, 0.92);
         backdrop-filter: blur(6px);
-        border-bottom: 1px solid #e2e8f0;
+        border-bottom: 1px solid var(--border);
         z-index: 5;
       }
       .nav {
@@ -41,7 +50,7 @@
         font-weight: 700;
       }
       .brand-badge {
-        background: #0f766e;
+        background: var(--brand);
         color: #fff;
         border-radius: 10px;
         padding: 6px 10px;
@@ -53,9 +62,12 @@
         flex-wrap: wrap;
       }
       .nav-links a {
-        color: #0f172a;
+        color: var(--text);
         text-decoration: none;
         font-size: 14px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: var(--surface-alt);
       }
       .hero {
         max-width: 1100px;
@@ -72,8 +84,8 @@
         gap: 8px;
         padding: 6px 12px;
         border-radius: 999px;
-        background: #fef3c7;
-        color: #92400e;
+        background: rgba(56, 189, 248, 0.15);
+        color: #bae6fd;
         font-size: 12px;
         font-weight: 600;
       }
@@ -84,13 +96,14 @@
       p {
         font-size: 18px;
         line-height: 1.6;
-        color: #334155;
+        color: var(--muted);
       }
       .hero-card {
-        background: #fff;
+        background: var(--surface);
         border-radius: 18px;
         padding: 22px;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--border);
       }
       .stats {
         display: grid;
@@ -99,9 +112,10 @@
         margin-top: 18px;
       }
       .stat {
-        background: #f1f5f9;
+        background: var(--surface-soft);
         border-radius: 14px;
         padding: 12px;
+        border: 1px solid var(--border);
       }
       .stat strong {
         font-size: 20px;
@@ -117,14 +131,14 @@
         padding: 12px 18px;
         border-radius: 10px;
         border: 0;
-        background: #0f766e;
-        color: #ffffff;
+        background: linear-gradient(135deg, var(--brand), var(--accent));
+        color: #0b1020;
         font-weight: 600;
         text-decoration: none;
       }
       .button.secondary {
-        background: #e2e8f0;
-        color: #0f172a;
+        background: var(--surface-alt);
+        color: var(--text);
       }
       .section {
         max-width: 1100px;
@@ -137,15 +151,16 @@
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       }
       .card {
-        background: #ffffff;
+        background: var(--surface);
         border-radius: 16px;
         padding: 18px;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border);
       }
       .pill {
         display: inline-block;
-        background: #e0f2fe;
-        color: #0369a1;
+        background: rgba(34, 197, 94, 0.15);
+        color: #86efac;
         font-size: 12px;
         padding: 4px 10px;
         border-radius: 999px;
@@ -157,17 +172,17 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       }
       .step {
-        background: #fff;
+        background: var(--surface);
         border-radius: 14px;
         padding: 16px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--border);
       }
       .footer {
         max-width: 1100px;
         margin: 0 auto 48px;
         padding: 0 24px 24px;
         font-size: 14px;
-        color: #64748b;
+        color: var(--muted);
       }
       .links {
         margin-top: 18px;
@@ -176,15 +191,62 @@
         flex-wrap: wrap;
       }
       .links a {
-        color: #0f172a;
+        color: var(--text);
         font-size: 14px;
         text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: var(--surface-alt);
       }
       code {
-        background: #f1f5f9;
+        background: var(--surface-alt);
         padding: 2px 6px;
         border-radius: 6px;
         font-size: 14px;
+      }
+      .demo-preview {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .preview-card {
+        background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(31, 41, 55, 0.9));
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        color: var(--text);
+      }
+      .preview-card h4 {
+        margin: 0 0 8px;
+      }
+      .preview-list {
+        display: grid;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .preview-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #0b1220;
+        border: 1px solid var(--border);
+        color: #cbd5f5;
+        font-size: 12px;
+      }
+      @media (max-width: 720px) {
+        h1 {
+          font-size: 32px;
+        }
+        .nav {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .nav-links {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -221,7 +283,7 @@
         </div>
         <div class="stats">
           <div class="stat">
-            <strong>+8</strong>
+            <strong>+18</strong>
             Categorías de mercados
           </div>
           <div class="stat">
@@ -250,6 +312,36 @@
             <span class="pill">Protección</span>
             <strong>Juego responsable</strong>
             <p>Límites, autoexclusión y alertas de riesgo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Vista de la demo</h2>
+      <div class="demo-preview">
+        <div class="preview-card">
+          <h4>Mercados y ligas</h4>
+          <div class="preview-list">
+            <span class="preview-pill">Fútbol · NBA · F1</span>
+            <span class="preview-pill">Elecciones · Cripto · Clima</span>
+            <span class="preview-pill">Ligas con logos y fixtures reales</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <h4>En vivo + apuestas</h4>
+          <div class="preview-list">
+            <span class="preview-pill">Cuotas según disciplina</span>
+            <span class="preview-pill">Timeline y estadísticas</span>
+            <span class="preview-pill">Boleta con múltiples picks</span>
+          </div>
+        </div>
+        <div class="preview-card">
+          <h4>Tablas y control</h4>
+          <div class="preview-list">
+            <span class="preview-pill">Posiciones por liga</span>
+            <span class="preview-pill">Historial y métricas</span>
+            <span class="preview-pill">KYC + AML + responsable</span>
           </div>
         </div>
       </div>
