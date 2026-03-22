@@ -2026,6 +2026,117 @@
         output.textContent = JSON.stringify(data, null, 2);
       };
 
+      const teamLogoCache = new Map();
+      const leagueLogoCache = new Map();
+      const sportIconCache = new Map();
+
+      const categoryToSportName = {
+        "Fútbol": "Soccer",
+        "Basket": "Basketball",
+        "NBA": "Basketball",
+        "Tenis": "Tennis",
+        "MMA": "MMA",
+        "Esports": "eSports",
+        "F1": "Motorsport",
+        "MotoGP": "Motorsport",
+        "Ciclismo": "Cycling",
+        "Golf": "Golf",
+        "Hockey": "Ice Hockey",
+        "Vóleibol": "Volleyball",
+        "Handball": "Handball",
+        "Rugby": "Rugby",
+        "Fútbol Americano": "American Football",
+        "Béisbol": "Baseball",
+        "Cricket": "Cricket",
+      };
+
+      const fetchTeamLogo = async (teamName) => {
+        if (!teamName) return "";
+        if (teamLogoCache.has(teamName)) return teamLogoCache.get(teamName);
+        try {
+          const res = await fetch(
+            `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`
+          );
+          if (!res.ok) return "";
+          const data = await res.json();
+          const logo =
+            data?.teams?.[0]?.strTeamBadge ||
+            data?.teams?.[0]?.strTeamLogo ||
+            data?.teams?.[0]?.strTeamFanart1 ||
+            "";
+          teamLogoCache.set(teamName, logo || "");
+          return logo || "";
+        } catch {
+          return "";
+        }
+      };
+
+      const fetchLeagueLogo = async (leagueName) => {
+        if (!leagueName) return "";
+        if (leagueLogoCache.has(leagueName)) return leagueLogoCache.get(leagueName);
+        try {
+          const res = await fetch(
+            `https://www.thesportsdb.com/api/v1/json/3/search_all_leagues.php?l=${encodeURIComponent(leagueName)}`
+          );
+          if (!res.ok) return "";
+          const data = await res.json();
+          const logo = data?.countries?.[0]?.strBadge || data?.countries?.[0]?.strLogo || "";
+          leagueLogoCache.set(leagueName, logo || "");
+          return logo || "";
+        } catch {
+          return "";
+        }
+      };
+
+      const fetchSportIcon = async (category) => {
+        const sportName = categoryToSportName[category];
+        if (!sportName) return "";
+        if (sportIconCache.has(sportName)) return sportIconCache.get(sportName);
+        try {
+          const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/all_sports.php");
+          if (!res.ok) return "";
+          const data = await res.json();
+          const match = (data?.sports || []).find((item) => item.strSport === sportName);
+          const icon = match?.strSportThumb || match?.strSportIconGreen || "";
+          sportIconCache.set(sportName, icon || "");
+          return icon || "";
+        } catch {
+          return "";
+        }
+      };
+
+      const applyDynamicLogos = async () => {
+        const teamImgs = Array.from(document.querySelectorAll("img[data-team]"));
+        await Promise.all(
+          teamImgs.map(async (img) => {
+            const team = img.dataset.team;
+            if (!team) return;
+            const logo = await fetchTeamLogo(team);
+            if (logo) img.src = logo;
+          })
+        );
+
+        const leagueImgs = Array.from(document.querySelectorAll("img[data-league]"));
+        await Promise.all(
+          leagueImgs.map(async (img) => {
+            const league = img.dataset.league;
+            if (!league) return;
+            const logo = await fetchLeagueLogo(league);
+            if (logo) img.src = logo;
+          })
+        );
+
+        const categoryImgs = Array.from(document.querySelectorAll("img[data-category]"));
+        await Promise.all(
+          categoryImgs.map(async (img) => {
+            const category = img.dataset.category;
+            if (!category) return;
+            const icon = await fetchSportIcon(category);
+            if (icon) img.src = icon;
+          })
+        );
+      };
+
       const getMatchSides = (title) => {
         if (!title || !title.includes(" vs ")) return null;
         const parts = title.split(" vs ");
@@ -2507,22 +2618,30 @@
           }
           card.innerHTML = `
             <div class="market-visual" style="display:flex;align-items:center;justify-content:center;">
-              <img src="${market.icon || "/demo/assets/icons/ball.svg"}" alt="icono" width="36" height="36" />
+              <img src="${market.icon || "/demo/assets/icons/ball.svg"}" data-category="${market.category}" alt="icono" width="36" height="36" />
             </div>
             <h4>${market.title}</h4>
             <div class="row" style="gap:8px;">
-              ${market.homeLogo ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" onerror="this.src='/demo/assets/icons/ball.svg'" />` : ""}
-              ${market.awayLogo ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" onerror="this.src='/demo/assets/icons/ball.svg'" />` : ""}
+              ${
+                market.homeLogo
+                  ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  : ""
+              }
+              ${
+                market.awayLogo
+                  ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  : ""
+              }
             </div>
             ${
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -2574,11 +2693,11 @@
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -2609,7 +2728,7 @@
           const tile = document.createElement("div");
           tile.className = "league-tile";
           tile.innerHTML = `
-            <img src="${league.logo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+            <img src="${league.logo || "/demo/assets/icons/ball.svg"}" alt="logo" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
             <div class="meta">
               <strong>${league.name}</strong>
               <span>${league.count} mercados</span>
@@ -2694,18 +2813,26 @@
             </div>
             <h4>${market.title}</h4>
             <div class="row" style="gap:8px;">
-              ${market.homeLogo ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" onerror="this.src='/demo/assets/icons/ball.svg'" />` : ""}
-              ${market.awayLogo ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" onerror="this.src='/demo/assets/icons/ball.svg'" />` : ""}
+              ${
+                market.homeLogo
+                  ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  : ""
+              }
+              ${
+                market.awayLogo
+                  ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  : ""
+              }
             </div>
             ${
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -3085,7 +3212,7 @@
           item.type = "button";
           item.innerHTML = `
             <div class="row" style="align-items:center;gap:8px;">
-              <img src="${league.logo || "/demo/assets/logos/liga-primera.svg"}" alt="logo" width="20" height="20" onerror="this.src='/demo/assets/icons/ball.svg'" />
+              <img src="${league.logo || "/demo/assets/logos/liga-primera.svg"}" alt="logo" width="20" height="20" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
               ${league.name}
             </div>
             <span>${league.count}</span>
@@ -3224,7 +3351,7 @@
           card.className = "banner-card";
           card.innerHTML = `
             <img src="${bannerImage}" alt="banner" style="width:100%;height:80px;object-fit:cover;border-radius:10px;" />
-            <img src="${bannerIcon}" alt="icono" />
+            <img src="${bannerIcon}" alt="icono" data-category="Promos" />
             <strong>${banner.title}</strong>
             <span>${banner.subtitle}</span>
             <button class="secondary" style="margin-top:0;">${banner.cta}</button>
@@ -3391,6 +3518,7 @@
         renderNews();
         renderStandings();
         renderTopLeagues();
+        applyDynamicLogos();
         renderSlip();
         renderHistory();
         renderBetSelects();
