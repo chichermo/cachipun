@@ -2029,6 +2029,40 @@
       const teamLogoCache = new Map();
       const leagueLogoCache = new Map();
       const sportIconCache = new Map();
+      const logoCacheKey = "cachupin-logo-cache";
+      const logoCacheTtlMs = 1000 * 60 * 60 * 24 * 14;
+
+      const readLogoCache = () => {
+        try {
+          const raw = localStorage.getItem(logoCacheKey);
+          if (!raw) return {};
+          return JSON.parse(raw);
+        } catch {
+          return {};
+        }
+      };
+
+      const writeLogoCache = (cache) => {
+        try {
+          localStorage.setItem(logoCacheKey, JSON.stringify(cache));
+        } catch {
+          // ignore
+        }
+      };
+
+      const getCachedLogo = (key) => {
+        const cache = readLogoCache();
+        const entry = cache[key];
+        if (!entry) return "";
+        if (Date.now() - entry.at > logoCacheTtlMs) return "";
+        return entry.url || "";
+      };
+
+      const setCachedLogo = (key, url) => {
+        const cache = readLogoCache();
+        cache[key] = { url, at: Date.now() };
+        writeLogoCache(cache);
+      };
 
       const categoryToSportName = {
         "Fútbol": "Soccer",
@@ -2053,18 +2087,18 @@
       const fetchTeamLogo = async (teamName) => {
         if (!teamName) return "";
         if (teamLogoCache.has(teamName)) return teamLogoCache.get(teamName);
+        const cached = getCachedLogo(`team:${teamName}`);
+        if (cached) {
+          teamLogoCache.set(teamName, cached);
+          return cached;
+        }
         try {
-          const res = await fetch(
-            `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`
-          );
+          const res = await fetch(`/api/logos/team?name=${encodeURIComponent(teamName)}`);
           if (!res.ok) return "";
           const data = await res.json();
-          const logo =
-            data?.teams?.[0]?.strTeamBadge ||
-            data?.teams?.[0]?.strTeamLogo ||
-            data?.teams?.[0]?.strTeamFanart1 ||
-            "";
+          const logo = data?.logo || "";
           teamLogoCache.set(teamName, logo || "");
+          if (logo) setCachedLogo(`team:${teamName}`, logo);
           return logo || "";
         } catch {
           return "";
@@ -2074,14 +2108,18 @@
       const fetchLeagueLogo = async (leagueName) => {
         if (!leagueName) return "";
         if (leagueLogoCache.has(leagueName)) return leagueLogoCache.get(leagueName);
+        const cached = getCachedLogo(`league:${leagueName}`);
+        if (cached) {
+          leagueLogoCache.set(leagueName, cached);
+          return cached;
+        }
         try {
-          const res = await fetch(
-            `https://www.thesportsdb.com/api/v1/json/3/search_all_leagues.php?l=${encodeURIComponent(leagueName)}`
-          );
+          const res = await fetch(`/api/logos/league?name=${encodeURIComponent(leagueName)}`);
           if (!res.ok) return "";
           const data = await res.json();
-          const logo = data?.countries?.[0]?.strBadge || data?.countries?.[0]?.strLogo || "";
+          const logo = data?.logo || "";
           leagueLogoCache.set(leagueName, logo || "");
+          if (logo) setCachedLogo(`league:${leagueName}`, logo);
           return logo || "";
         } catch {
           return "";
@@ -2092,17 +2130,43 @@
         const sportName = categoryToSportName[category];
         if (!sportName) return "";
         if (sportIconCache.has(sportName)) return sportIconCache.get(sportName);
+        const cached = getCachedLogo(`sport:${sportName}`);
+        if (cached) {
+          sportIconCache.set(sportName, cached);
+          return cached;
+        }
         try {
-          const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/all_sports.php");
+          const res = await fetch(`/api/logos/sport?name=${encodeURIComponent(sportName)}`);
           if (!res.ok) return "";
           const data = await res.json();
-          const match = (data?.sports || []).find((item) => item.strSport === sportName);
-          const icon = match?.strSportThumb || match?.strSportIconGreen || "";
+          const icon = data?.logo || "";
           sportIconCache.set(sportName, icon || "");
+          if (icon) setCachedLogo(`sport:${sportName}`, icon);
           return icon || "";
         } catch {
           return "";
         }
+      };
+
+      const getCategoryFallbackIcon = (category) => {
+        const map = {
+          "Elecciones": "/demo/assets/icons/trophy.svg",
+          "Política": "/demo/assets/icons/trophy.svg",
+          "Economía": "/demo/assets/icons/coin.svg",
+          "Cripto": "/demo/assets/icons/coin.svg",
+          "Ciencia": "/demo/assets/icons/chip.svg",
+          "Salud": "/demo/assets/icons/bolt.svg",
+          "Geopolítica": "/demo/assets/icons/trophy.svg",
+          "Empresas": "/demo/assets/icons/coin.svg",
+          "Energía": "/demo/assets/icons/bolt.svg",
+          "Justicia": "/demo/assets/icons/trophy.svg",
+          "Medioambiente": "/demo/assets/icons/cloud.svg",
+          "Clima": "/demo/assets/icons/cloud.svg",
+          "Tecnología": "/demo/assets/icons/chip.svg",
+          "Cultura": "/demo/assets/icons/trophy.svg",
+          "Entretenimiento": "/demo/assets/icons/bolt.svg"
+        };
+        return map[category] || "/demo/assets/icons/ball.svg";
       };
 
       const applyDynamicLogos = async () => {
@@ -2618,7 +2682,7 @@
           }
           card.innerHTML = `
             <div class="market-visual" style="display:flex;align-items:center;justify-content:center;">
-              <img src="${market.icon || "/demo/assets/icons/ball.svg"}" data-category="${market.category}" alt="icono" width="36" height="36" />
+              <img src="${market.icon || getCategoryFallbackIcon(market.category)}" data-category="${market.category}" alt="icono" width="36" height="36" />
             </div>
             <h4>${market.title}</h4>
             <div class="row" style="gap:8px;">
@@ -2727,12 +2791,13 @@
         top.forEach((league) => {
           const tile = document.createElement("div");
           tile.className = "league-tile";
+          const liveCount = liveData.filter((item) => item.category === league.name).length;
           tile.innerHTML = `
             <img src="${league.logo || "/demo/assets/icons/ball.svg"}" alt="logo" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
             <div class="meta">
               <strong>${league.name}</strong>
               <span>${league.count} mercados</span>
-              <span>${fixturesData.filter((item) => item.league === league.name).length} fixtures</span>
+              <span>${fixturesData.filter((item) => item.league === league.name).length} fixtures · ${liveCount} live</span>
             </div>
           `;
           tile.onclick = () => {

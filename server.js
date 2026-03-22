@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 
@@ -1484,8 +1485,89 @@ const apiData = {
   ],
 };
 
+const logoCache = new Map();
+const logoCacheTtlMs = 1000 * 60 * 60 * 24 * 14;
+
+const getCachedLogo = (key) => {
+  const entry = logoCache.get(key);
+  if (!entry) return "";
+  if (Date.now() - entry.at > logoCacheTtlMs) {
+    logoCache.delete(key);
+    return "";
+  }
+  return entry.url || "";
+};
+
+const setCachedLogo = (key, url) => {
+  if (!url) return;
+  logoCache.set(key, { url, at: Date.now() });
+};
+
+const fetchJson = (url) =>
+  new Promise((resolve) => {
+    https
+      .get(url, (resp) => {
+        let data = "";
+        resp.on("data", (chunk) => {
+          data += chunk;
+        });
+        resp.on("end", () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch {
+            resolve(null);
+          }
+        });
+      })
+      .on("error", () => resolve(null));
+  });
+
+const resolveTeamLogo = async (teamName) => {
+  if (!teamName) return "";
+  const cacheKey = `team:${teamName}`;
+  const cached = getCachedLogo(cacheKey);
+  if (cached) return cached;
+  const url = `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`;
+  const data = await fetchJson(url);
+  const logo =
+    data?.teams?.[0]?.strTeamBadge ||
+    data?.teams?.[0]?.strTeamLogo ||
+    data?.teams?.[0]?.strTeamFanart1 ||
+    "";
+  if (logo) setCachedLogo(cacheKey, logo);
+  return logo || "";
+};
+
+const resolveLeagueLogo = async (leagueName) => {
+  if (!leagueName) return "";
+  const cacheKey = `league:${leagueName}`;
+  const cached = getCachedLogo(cacheKey);
+  if (cached) return cached;
+  const url = `https://www.thesportsdb.com/api/v1/json/3/search_all_leagues.php?l=${encodeURIComponent(leagueName)}`;
+  const data = await fetchJson(url);
+  const logo = data?.countries?.[0]?.strBadge || data?.countries?.[0]?.strLogo || "";
+  if (logo) setCachedLogo(cacheKey, logo);
+  return logo || "";
+};
+
+const resolveSportIcon = async (sportName) => {
+  if (!sportName) return "";
+  const cacheKey = `sport:${sportName}`;
+  const cached = getCachedLogo(cacheKey);
+  if (cached) return cached;
+  const data = await fetchJson("https://www.thesportsdb.com/api/v1/json/3/all_sports.php");
+  const match = (data?.sports || []).find((item) => item.strSport === sportName);
+  const icon = match?.strSportThumb || match?.strSportIconGreen || "";
+  if (icon) setCachedLogo(cacheKey, icon);
+  return icon || "";
+};
+
 const sendJson = (res, payload) => {
-  res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+  res.writeHead(200, {
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+  });
   res.end(JSON.stringify(payload));
 };
 
@@ -1526,6 +1608,21 @@ const server = http.createServer((req, res) => {
   }
   if ((req.url || "").startsWith("/api/")) {
     const endpoint = (req.url || "").split("?")[0];
+    if (endpoint === "/api/logos/team") {
+      const name = new URL(req.url, "http://localhost").searchParams.get("name") || "";
+      resolveTeamLogo(name).then((logo) => sendJson(res, { logo }));
+      return;
+    }
+    if (endpoint === "/api/logos/league") {
+      const name = new URL(req.url, "http://localhost").searchParams.get("name") || "";
+      resolveLeagueLogo(name).then((logo) => sendJson(res, { logo }));
+      return;
+    }
+    if (endpoint === "/api/logos/sport") {
+      const name = new URL(req.url, "http://localhost").searchParams.get("name") || "";
+      resolveSportIcon(name).then((logo) => sendJson(res, { logo }));
+      return;
+    }
     if (endpoint === "/api/markets") return sendJson(res, apiData.markets);
     if (endpoint === "/api/live") return sendJson(res, apiData.live);
     if (endpoint === "/api/fixtures") return sendJson(res, apiData.fixtures);
