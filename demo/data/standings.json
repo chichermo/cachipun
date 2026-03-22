@@ -1,0 +1,20 @@
+[
+  {
+    "league": "Primera División",
+    "updated": "2026-03-20",
+    "rows": [
+      { "team": "Colo-Colo", "played": 8, "w": 5, "d": 2, "l": 1, "gf": 14, "pts": 17, "logo": "/demo/assets/logos/team-colo-colo.svg" },
+      { "team": "Universidad de Chile", "played": 8, "w": 5, "d": 1, "l": 2, "gf": 13, "pts": 16, "logo": "/demo/assets/logos/team-la-u.svg" },
+      { "team": "Universidad Católica", "played": 8, "w": 4, "d": 2, "l": 2, "gf": 12, "pts": 14, "logo": "/demo/assets/logos/team-uc.svg" },
+      { "team": "Palestino", "played": 8, "w": 3, "d": 3, "l": 2, "gf": 10, "pts": 12, "logo": "/demo/assets/logos/team-palestino.svg" }
+    ]
+  },
+  {
+    "league": "Premier League",
+    "updated": "2026-03-20",
+    "rows": [
+      { "team": "Arsenal", "played": 27, "w": 18, "d": 5, "l": 4, "gf": 55, "pts": 59, "logo": "/demo/assets/logos/team-ars.svg" },
+      { "team": "Chelsea", "played": 27, "w": 16, "d": 6, "l": 5, "gf": 48, "pts": 54, "logo": "/demo/assets/logos/team-che.svg" }
+    ]
+  }
+]

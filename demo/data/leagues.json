@@ -1,0 +1,10 @@
+[
+  { "id": "liga-1", "name": "Primera División", "count": 18, "logo": "/demo/assets/logos/liga-primera.svg" },
+  { "id": "liga-2", "name": "Copa Chile", "count": 14, "logo": "/demo/assets/logos/liga-primera.svg" },
+  { "id": "liga-3", "name": "Premier League", "count": 20, "logo": "/demo/assets/logos/liga-premier.svg" },
+  { "id": "liga-4", "name": "Champions League", "count": 12, "logo": "/demo/assets/logos/liga-champions.svg" },
+  { "id": "liga-5", "name": "NBA", "count": 9, "logo": "/demo/assets/logos/liga-nba.svg" },
+  { "id": "liga-6", "name": "Formula 1", "count": 10, "logo": "/demo/assets/logos/liga-f1.svg" },
+  { "id": "liga-7", "name": "NHL", "count": 8, "logo": "/demo/assets/logos/liga-nhl.svg" },
+  { "id": "liga-8", "name": "LoL", "count": 8, "logo": "/demo/assets/logos/liga-lol.svg" }
+]

@@ -86,7 +86,7 @@ const apiData = {
       id: "mkt-1",
       category: "Fútbol",
       league: "Primera División",
-      title: "Colo-Colo vs La U",
+      title: "Colo-Colo vs Universidad de Chile",
       description: "Resultado final del clásico.",
       source: "ANFP / marcador oficial",
       close_at: "2026-03-20T18:00",
@@ -355,6 +355,8 @@ const apiData = {
       participants: 60,
       confidence: 58,
       icon: "/demo/assets/icons/bolt.svg",
+      homeLogo: "/demo/assets/logos/team-verstappen.svg",
+      awayLogo: "/demo/assets/logos/team-hamilton.svg",
     },
     {
       id: "mkt-19",
@@ -595,6 +597,20 @@ const apiData = {
       icon: "/demo/assets/icons/bolt.svg",
     },
     {
+      id: "mkt-42",
+      category: "Elecciones",
+      league: "Chile",
+      title: "Primaria presidencial: gana candidata A",
+      description: "Resultado oficial del SERVEL.",
+      source: "SERVEL",
+      close_at: "2026-05-15T20:00",
+      status: "abierto",
+      liquidity: 260000,
+      participants: 40,
+      confidence: 52,
+      icon: "/demo/assets/icons/trophy.svg",
+    },
+    {
       id: "mkt-36",
       category: "Salud",
       league: "Global",
@@ -651,6 +667,34 @@ const apiData = {
       icon: "/demo/assets/icons/cloud.svg",
     },
     {
+      id: "mkt-40",
+      category: "Justicia",
+      league: "Chile",
+      title: "Se aprueba nueva ley de datos",
+      description: "Votacion final en la Camara.",
+      source: "Camara de Diputados",
+      close_at: "2026-04-28T19:00",
+      status: "abierto",
+      liquidity: 150000,
+      participants: 20,
+      confidence: 47,
+      icon: "/demo/assets/icons/trophy.svg",
+    },
+    {
+      id: "mkt-41",
+      category: "Medioambiente",
+      league: "Chile",
+      title: "Se declara nuevo parque nacional",
+      description: "Decreto oficial publicado.",
+      source: "Ministerio del Medio Ambiente",
+      close_at: "2026-05-02T17:00",
+      status: "abierto",
+      liquidity: 120000,
+      participants: 16,
+      confidence: 44,
+      icon: "/demo/assets/icons/cloud.svg",
+    },
+    {
       id: "mkt-28",
       category: "Golf",
       league: "PGA Tour",
@@ -697,7 +741,7 @@ const apiData = {
     {
       id: "live-1",
       matchId: "fx-1",
-      title: "Colo-Colo vs La U",
+      title: "Colo-Colo vs Universidad de Chile",
       category: "Deportes",
       minute: 67,
       score: "1-0",
@@ -748,7 +792,7 @@ const apiData = {
       id: "fx-1",
       league: "Primera División",
       home: "Colo-Colo",
-      away: "La U",
+      away: "Universidad de Chile",
       time: "18:30",
       odds: "1.85",
       day: "Hoy",
@@ -945,7 +989,7 @@ const apiData = {
     {
       id: "fx-19",
       league: "Copa Chile",
-      home: "La U",
+      home: "Universidad de Chile",
       away: "Palestino",
       time: "20:00",
       odds: "1.96",
@@ -1386,6 +1430,26 @@ const apiData = {
       odds: { home: 1.9, draw: 0, away: 2.1 },
     },
   ],
+  standings: [
+    {
+      league: "Primera División",
+      updated: "2026-03-20",
+      rows: [
+        { team: "Colo-Colo", played: 8, w: 5, d: 2, l: 1, gf: 14, pts: 17, logo: "/demo/assets/logos/team-colo-colo.svg" },
+        { team: "Universidad de Chile", played: 8, w: 5, d: 1, l: 2, gf: 13, pts: 16, logo: "/demo/assets/logos/team-la-u.svg" },
+        { team: "Universidad Católica", played: 8, w: 4, d: 2, l: 2, gf: 12, pts: 14, logo: "/demo/assets/logos/team-uc.svg" },
+        { team: "Palestino", played: 8, w: 3, d: 3, l: 2, gf: 10, pts: 12, logo: "/demo/assets/logos/team-palestino.svg" }
+      ],
+    },
+    {
+      league: "Premier League",
+      updated: "2026-03-20",
+      rows: [
+        { team: "Arsenal", played: 27, w: 18, d: 5, l: 4, gf: 55, pts: 59, logo: "/demo/assets/logos/team-ars.svg" },
+        { team: "Chelsea", played: 27, w: 16, d: 6, l: 5, gf: 48, pts: 54, logo: "/demo/assets/logos/team-che.svg" }
+      ],
+    }
+  ],
   news: [
     {
       id: "nw-1",
@@ -1469,6 +1533,7 @@ const server = http.createServer((req, res) => {
     if (endpoint === "/api/leagues") return sendJson(res, apiData.leagues);
     if (endpoint === "/api/news") return sendJson(res, apiData.news);
     if (endpoint === "/api/matches") return sendJson(res, apiData.matches);
+    if (endpoint === "/api/standings") return sendJson(res, apiData.standings || []);
     return sendJson(res, { error: "Not found" });
   }
   const filePath = safePath(req.url || "/");

@@ -1,4 +1,4 @@
-const CACHE_NAME = "cachupin-pwa-v7";
+const CACHE_NAME = "cachupin-pwa-v10";
 const OFFLINE_URL = "/demo/offline.html";
 
 const CORE_ASSETS = [
@@ -84,12 +84,22 @@ const CORE_ASSETS = [
   "/demo/assets/logos/team-rangers.svg",
   "/demo/assets/logos/team-mia.svg",
   "/demo/assets/logos/team-lafc.svg",
+  "/demo/assets/logos/team-verstappen.svg",
+  "/demo/assets/logos/team-hamilton.svg",
   "/demo/legal/terminos.html",
   "/demo/legal/privacidad.html",
   "/demo/legal/reglamento-apuestas.html",
   "/demo/legal/kyc-aml.html",
   "/demo/legal/juego-responsable.html",
-  "/demo/legal/uso-prohibido.html"
+  "/demo/legal/uso-prohibido.html",
+  "/demo/data/markets.json",
+  "/demo/data/live.json",
+  "/demo/data/fixtures.json",
+  "/demo/data/banners.json",
+  "/demo/data/leagues.json",
+  "/demo/data/news.json",
+  "/demo/data/matches.json",
+  "/demo/data/standings.json"
 ];
 
 self.addEventListener("install", (event) => {

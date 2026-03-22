@@ -1,0 +1,26 @@
+[
+  {
+    "id": "live-1",
+    "matchId": "fx-1",
+    "title": "Colo-Colo vs Universidad de Chile",
+    "category": "Fútbol",
+    "minute": 67,
+    "score": "1-0",
+    "yesOdd": 1.72,
+    "noOdd": 2.25,
+    "homeLogo": "/demo/assets/logos/team-colo-colo.svg",
+    "awayLogo": "/demo/assets/logos/team-la-u.svg"
+  },
+  {
+    "id": "live-2",
+    "matchId": "fx-3",
+    "title": "Lakers vs Heat",
+    "category": "NBA",
+    "minute": 33,
+    "score": "54-48",
+    "yesOdd": 1.58,
+    "noOdd": 2.45,
+    "homeLogo": "/demo/assets/logos/team-lakers.svg",
+    "awayLogo": "/demo/assets/logos/team-heat.svg"
+  }
+]

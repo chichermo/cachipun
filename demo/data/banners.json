@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bn-1",
+    "title": "Bono de bienvenida",
+    "subtitle": "+20% en apuestas demo",
+    "cta": "Activar bono",
+    "icon": "/demo/assets/icons/bolt.svg",
+    "image": "/demo/assets/banners/bonus.svg"
+  },
+  {
+    "id": "bn-2",
+    "title": "Cashout rápido",
+    "subtitle": "Retira ganancias antes del cierre",
+    "cta": "Ver opciones",
+    "icon": "/demo/assets/icons/coin.svg",
+    "image": "/demo/assets/banners/cashout.svg"
+  },
+  {
+    "id": "bn-3",
+    "title": "Ligas en vivo",
+    "subtitle": "Seguimiento en tiempo real",
+    "cta": "Explorar",
+    "icon": "/demo/assets/icons/trophy.svg",
+    "image": "/demo/assets/banners/live.svg"
+  }
+]

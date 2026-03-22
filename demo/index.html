@@ -158,7 +158,7 @@
         position: sticky;
         top: 88px;
         height: fit-content;
-        z-index: 10;
+        z-index: 1;
         max-height: calc(100vh - 120px);
         overflow: auto;
         background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.98));
@@ -199,13 +199,15 @@
         display: grid;
         gap: 16px;
         position: relative;
-        z-index: 1;
+        z-index: 2;
       }
       .panel {
         padding: 16px;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.35);
       }
       .panel h3 {
         margin: 0 0 12px;
+        color: #f8fafc;
       }
       .tag {
         display: inline-flex;
@@ -213,8 +215,8 @@
         gap: 6px;
         padding: 4px 10px;
         border-radius: 999px;
-        background: var(--surface-alt);
-        color: var(--muted);
+        background: #0b1220;
+        color: #cbd5f5;
         font-size: 12px;
         font-weight: 600;
       }
@@ -637,6 +639,9 @@
         color: var(--muted);
         font-weight: 600;
       }
+      .table-wrap {
+        overflow-x: auto;
+      }
       .league-list {
         display: grid;
         gap: 8px;
@@ -892,10 +897,13 @@
             <div class="filter-chip" data-category="Economía">Economía</div>
             <div class="filter-chip" data-category="Cripto">Cripto</div>
             <div class="filter-chip" data-category="Ciencia">Ciencia</div>
+            <div class="filter-chip" data-category="Elecciones">Elecciones</div>
             <div class="filter-chip" data-category="Salud">Salud</div>
             <div class="filter-chip" data-category="Geopolítica">Geopolítica</div>
             <div class="filter-chip" data-category="Empresas">Empresas</div>
             <div class="filter-chip" data-category="Energía">Energía</div>
+            <div class="filter-chip" data-category="Justicia">Justicia</div>
+            <div class="filter-chip" data-category="Medioambiente">Medioambiente</div>
             <div class="filter-chip" data-category="Clima">Clima</div>
             <div class="filter-chip" data-category="Tecnología">Tecnología</div>
             <div class="filter-chip" data-category="Cultura">Cultura</div>
@@ -925,10 +933,13 @@
               <option value="Economía">Economía</option>
               <option value="Cripto">Cripto</option>
               <option value="Ciencia">Ciencia</option>
+              <option value="Elecciones">Elecciones</option>
               <option value="Salud">Salud</option>
               <option value="Geopolítica">Geopolítica</option>
               <option value="Empresas">Empresas</option>
               <option value="Energía">Energía</option>
+              <option value="Justicia">Justicia</option>
+              <option value="Medioambiente">Medioambiente</option>
               <option value="Clima">Clima</option>
               <option value="Tecnología">Tecnología</option>
               <option value="Cultura">Cultura</option>
@@ -997,6 +1008,13 @@
           <div class="tag">Jornadas</div>
           <h3>Fixtures por jornada</h3>
           <div class="day-accordion" id="round-accordion"></div>
+        </section>
+        <section class="panel" data-section="fixtures">
+          <div class="tag">Tabla</div>
+          <h3>Posiciones por liga</h3>
+          <div class="table-wrap">
+            <table class="table" id="standings-table"></table>
+          </div>
         </section>
 
         <section class="panel" data-section="sports">
@@ -1371,7 +1389,7 @@
           id: "mkt-1",
           category: "Fútbol",
           league: "Primera División",
-          title: "Colo-Colo vs La U",
+          title: "Colo-Colo vs Universidad de Chile",
           description: "Resultado final del clásico.",
           source: "ANFP / marcador oficial",
           close_at: "2026-03-20T18:00",
@@ -1601,13 +1619,39 @@
           participants: 35,
           confidence: 54,
         },
+        {
+          id: "mkt-19",
+          category: "Justicia",
+          league: "Chile",
+          title: "Se aprueba nueva ley de datos",
+          description: "Votación final en la Cámara.",
+          source: "Cámara de Diputados",
+          close_at: "2026-04-28T19:00",
+          status: "abierto",
+          liquidity: 150000,
+          participants: 20,
+          confidence: 47,
+        },
+        {
+          id: "mkt-20",
+          category: "Medioambiente",
+          league: "Chile",
+          title: "Se declara nuevo parque nacional",
+          description: "Decreto oficial publicado.",
+          source: "Ministerio del Medio Ambiente",
+          close_at: "2026-05-02T17:00",
+          status: "abierto",
+          liquidity: 120000,
+          participants: 16,
+          confidence: 44,
+        },
       ];
       const fallbackLive = [
-        { id: "live-1", title: "Colo-Colo vs La U", category: "Fútbol", minute: 67, score: "1-0", yesOdd: 1.72, noOdd: 2.25 },
+        { id: "live-1", title: "Colo-Colo vs Universidad de Chile", category: "Fútbol", minute: 67, score: "1-0", yesOdd: 1.72, noOdd: 2.25 },
         { id: "live-2", title: "Lakers vs Heat", category: "NBA", minute: 33, score: "54-48", yesOdd: 1.58, noOdd: 2.45 },
       ];
       const fallbackFixtures = [
-        { id: "fx-1", league: "Primera División", home: "Colo-Colo", away: "La U", time: "18:30", odds: "1.85" },
+        { id: "fx-1", league: "Primera División", home: "Colo-Colo", away: "Universidad de Chile", time: "18:30", odds: "1.85" },
         { id: "fx-2", league: "Champions League", home: "PSG", away: "Milan", time: "20:00", odds: "2.05" },
         { id: "fx-3", league: "NBA", home: "Lakers", away: "Heat", time: "22:15", odds: "1.72" },
         { id: "fx-4", league: "ATP Tour", home: "Alcaraz", away: "Medvedev", time: "15:40", odds: "1.64" },
@@ -1637,6 +1681,7 @@
       let bannersData = [...fallbackBanners];
       let leaguesData = [...fallbackLeagues];
       let newsData = [...fallbackNews];
+      let standingsData = [];
 
       const loadState = () => {
         try {
@@ -1674,6 +1719,7 @@
       const marketSort = document.getElementById("market-sort");
       const quickFilters = document.getElementById("quick-filters");
       const sportsGrid = document.getElementById("sports-grid");
+      const standingsTable = document.getElementById("standings-table");
       const betMarketInput = document.getElementById("bet-market");
       const betDescInput = document.getElementById("bet-desc");
       const betSourceInput = document.getElementById("bet-source");
@@ -1756,6 +1802,66 @@
 
       const print = (data) => {
         output.textContent = JSON.stringify(data, null, 2);
+      };
+
+      const getMatchSides = (title) => {
+        if (!title || !title.includes(" vs ")) return null;
+        const parts = title.split(" vs ");
+        if (parts.length !== 2) return null;
+        return [parts[0].trim(), parts[1].trim()];
+      };
+
+      const getMarketPicks = (market) => {
+        const category = market.category || "";
+        const sides = getMatchSides(market.title);
+        if (category === "Fútbol") {
+          return sides ? [sides[0], "Empate", sides[1]] : ["Local", "Empate", "Visita"];
+        }
+        if (["Basket", "NBA", "Hockey", "Vóleibol", "Handball", "Rugby", "Fútbol Americano", "Béisbol", "Cricket"].includes(category)) {
+          return sides ? [sides[0], sides[1]] : ["Local", "Visita"];
+        }
+        if (["Tenis", "Esports", "MMA", "Boxeo", "Dardos"].includes(category)) {
+          return sides ? [sides[0], sides[1]] : ["Ganador A", "Ganador B"];
+        }
+        if (["F1", "MotoGP", "Ciclismo", "Golf"].includes(category)) {
+          return sides ? [sides[0], sides[1]] : ["Ganador", "Podio", "Pole"];
+        }
+        if (category === "Elecciones") {
+          return sides ? [sides[0], sides[1]] : ["Candidato A", "Candidato B"];
+        }
+        if (
+          ["Política", "Economía", "Cripto", "Ciencia", "Salud", "Geopolítica", "Empresas", "Energía", "Justicia", "Medioambiente", "Clima", "Tecnología", "Cultura", "Entretenimiento"].includes(category)
+        ) {
+          return ["Sí", "No"];
+        }
+        return ["Sí", "No"];
+      };
+
+      const buildOddsRow = (market) => {
+        const picks = getMarketPicks(market);
+        const base = 1.6 + (100 - (market.confidence || 55)) / 120;
+        const odds = picks.map((_, idx) => (base + idx * 0.35).toFixed(2));
+        const logos = [];
+        if (market.homeLogo) logos.push(market.homeLogo);
+        if (market.awayLogo) logos.push(market.awayLogo);
+        const buttons = picks
+          .map((pick, idx) => {
+            const logo =
+              logos.length >= 2 && (idx === 0 || (idx === picks.length - 1 && pick !== "Empate"))
+                ? logos[idx === 0 ? 0 : logos.length - 1]
+                : "";
+            return `
+              <div class="odds-btn" data-pick="${pick}" data-odd="${odds[idx]}">
+                <strong>${odds[idx]}</strong>
+                <span class="row" style="gap:6px;justify-content:center;">
+                  ${logo ? `<img src="${logo}" alt="logo" width="16" height="16" />` : ""}
+                  ${pick}
+                </span>
+              </div>
+            `;
+          })
+          .join("");
+        return `<div class="odds-row" style="grid-template-columns: repeat(${picks.length}, 1fr);">${buttons}</div>`;
       };
 
       const logAudit = (entry) => {
@@ -2167,9 +2273,6 @@
           return;
         }
         filtered.forEach((market) => {
-          const yesOdd = (1.6 + (100 - market.confidence) / 100).toFixed(2);
-          const noOdd = (2.1 + market.confidence / 120).toFixed(2);
-          const drawOdd = (2.8).toFixed(2);
           const card = document.createElement("div");
           card.className = "market-card";
           if (selectedMarket?.id === market.id) {
@@ -2192,11 +2295,7 @@
             <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;">
               ${market.description}
             </p>
-            <div class="odds-row">
-              <div class="odds-btn" data-pick="Sí" data-odd="${yesOdd}"><strong>${yesOdd}</strong>Sí</div>
-              <div class="odds-btn" data-pick="Empate" data-odd="${drawOdd}"><strong>${drawOdd}</strong>Empate</div>
-              <div class="odds-btn" data-pick="No" data-odd="${noOdd}"><strong>${noOdd}</strong>No</div>
-            </div>
+            ${buildOddsRow(market)}
             <div class="row" style="justify-content:space-between;margin-top:8px;">
               <span class="tag">CLP ${market.liquidity.toLocaleString("es-CL")}</span>
               <button class="favorite-btn ${state.favorites.includes(market.id) ? "active" : ""}">
@@ -2233,13 +2332,15 @@
               <span>${market.category}</span>
               <span>${market.participants} jugadores</span>
             </div>
-            <div class="odds-row">
-              <div class="odds-btn"><strong>1.70</strong>Sí</div>
-              <div class="odds-btn"><strong>2.05</strong>No</div>
-              <div class="odds-btn"><strong>1.88</strong>Cashout</div>
-            </div>
+            ${buildOddsRow(market)}
           `;
           card.onclick = () => setMarket(market);
+          card.querySelectorAll(".odds-btn").forEach((btn) => {
+            btn.addEventListener("click", (event) => {
+              event.stopPropagation();
+              addToSlip(market, btn.dataset.pick, btn.dataset.odd);
+            });
+          });
           topPicks.appendChild(card);
         });
       };
@@ -2287,8 +2388,6 @@
         const live = liveData.slice(0, 3);
         liveGrid.innerHTML = "";
         live.forEach((market) => {
-          const yesOdd = Number(market.yesOdd || 1.7).toFixed(2);
-          const noOdd = Number(market.noOdd || 2.2).toFixed(2);
           const card = document.createElement("div");
           card.className = "market-card";
           card.innerHTML = `
@@ -2302,11 +2401,7 @@
               ${market.homeLogo ? `<img src="${market.homeLogo}" alt="home" width="22" height="22" />` : ""}
               ${market.awayLogo ? `<img src="${market.awayLogo}" alt="away" width="22" height="22" />` : ""}
             </div>
-            <div class="odds-row">
-              <div class="odds-btn" data-pick="Sí" data-odd="${yesOdd}"><strong>${yesOdd}</strong>Sí</div>
-              <div class="odds-btn" data-pick="No" data-odd="${noOdd}"><strong>${noOdd}</strong>No</div>
-              <div class="odds-btn" data-pick="Cashout" data-odd="1.90"><strong>1.90</strong>Cashout</div>
-            </div>
+            ${buildOddsRow(market)}
             <div class="row" style="justify-content:space-between;">
               <span class="score-badge">Marcador: ${market.score || "0-0"}</span>
               <span class="tag">Min ${market.minute || 0}</span>
@@ -2342,12 +2437,12 @@
             </div>
             <div class="fixture-row">
               <span class="row" style="align-items:center;gap:6px;">
-                <img src="${item.homeLogo}" alt="home" width="18" height="18" />
+                <img src="${item.homeLogo || "/demo/assets/icons/ball.svg"}" alt="home" width="18" height="18" />
                 ${item.home}
               </span>
               <span>vs</span>
               <span class="row" style="align-items:center;gap:6px;">
-                <img src="${item.awayLogo}" alt="away" width="18" height="18" />
+                <img src="${item.awayLogo || "/demo/assets/icons/ball.svg"}" alt="away" width="18" height="18" />
                 ${item.away}
               </span>
             </div>
@@ -2612,9 +2707,55 @@
             selectedLeague = league;
             renderLeagueTabs();
             renderFixtures();
+            renderStandings();
           };
           leagueTabs.appendChild(tab);
         });
+      };
+
+      const renderStandings = () => {
+        if (!standingsTable) return;
+        const targetLeague = selectedLeague === "all" ? "Primera División" : selectedLeague;
+        const entry = standingsData.find((item) => item.league === targetLeague);
+        if (!entry) {
+          standingsTable.innerHTML =
+            "<tbody><tr><td colspan=\"8\">Sin tabla disponible para esta liga.</td></tr></tbody>";
+          return;
+        }
+        const rows = entry.rows
+          .map(
+            (row, idx) => `
+              <tr>
+                <td>${idx + 1}</td>
+                <td class="row" style="gap:6px;">
+                  <img src="${row.logo || "/demo/assets/icons/ball.svg"}" alt="logo" width="18" height="18" />
+                  ${row.team}
+                </td>
+                <td>${row.played}</td>
+                <td>${row.w}</td>
+                <td>${row.d}</td>
+                <td>${row.l}</td>
+                <td>${row.gf}</td>
+                <td>${row.pts}</td>
+              </tr>
+            `
+          )
+          .join("");
+        standingsTable.innerHTML = `
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Equipo</th>
+              <th>PJ</th>
+              <th>G</th>
+              <th>E</th>
+              <th>P</th>
+              <th>GF</th>
+              <th>PTS</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        `;
       };
 
       const renderTopbar = () => {
@@ -2803,14 +2944,18 @@
       };
 
       const loadApiData = async () => {
-        markets = await fetchJson("/api/markets", fallbackMarkets);
-        liveData = await fetchJson("/api/live", fallbackLive);
-        fixturesData = await fetchJson("/api/fixtures", fallbackFixtures);
-        bannersData = await fetchJson("/api/banners", fallbackBanners);
-        leaguesData = await fetchJson("/api/leagues", fallbackLeagues);
-        newsData = await fetchJson("/api/news", fallbackNews);
-        const rawMatches = await fetchJson("/api/matches", []);
+        const apiBase = location.hostname.includes("vercel.app") ? "/demo/data" : "/api";
+        const apiSuffix = apiBase === "/api" ? "" : ".json";
+        markets = await fetchJson(`${apiBase}/markets${apiSuffix}`, fallbackMarkets);
+        liveData = await fetchJson(`${apiBase}/live${apiSuffix}`, fallbackLive);
+        fixturesData = await fetchJson(`${apiBase}/fixtures${apiSuffix}`, fallbackFixtures);
+        bannersData = await fetchJson(`${apiBase}/banners${apiSuffix}`, fallbackBanners);
+        leaguesData = await fetchJson(`${apiBase}/leagues${apiSuffix}`, fallbackLeagues);
+        newsData = await fetchJson(`${apiBase}/news${apiSuffix}`, fallbackNews);
+        const rawMatches = await fetchJson(`${apiBase}/matches${apiSuffix}`, []);
+        const rawStandings = await fetchJson(`${apiBase}/standings${apiSuffix}`, []);
         matchesData = Array.isArray(rawMatches) ? rawMatches : [];
+        standingsData = Array.isArray(rawStandings) ? rawStandings : [];
       };
 
       const renderMarketTable = () => {
@@ -2925,6 +3070,7 @@
         renderSports();
         renderBanners();
         renderNews();
+        renderStandings();
         renderSlip();
         renderHistory();
         renderBetSelects();
