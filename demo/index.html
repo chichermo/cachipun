@@ -2084,6 +2084,59 @@
         "Cricket": "Cricket",
       };
 
+      const teamLogoOverrides = {
+        "Colo-Colo": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Colo-Colo_2020_logo.svg",
+        "Universidad de Chile": "https://upload.wikimedia.org/wikipedia/commons/6/61/Logo_Universidad_de_Chile.svg",
+        "Universidad Católica": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Escudo_Club_Deportivo_Universidad_Cat%C3%B3lica.svg",
+        "Palestino": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Club_Deportivo_Palestino.svg",
+        "Arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+        "Chelsea": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
+        "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
+        "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg",
+        "Juventus": "https://upload.wikimedia.org/wikipedia/commons/1/15/Juventus_FC_2017_logo.svg",
+        "Inter": "https://upload.wikimedia.org/wikipedia/en/0/0b/Inter_Milan.svg",
+        "PSG": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
+        "Milan": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg",
+        "Bayern": "https://upload.wikimedia.org/wikipedia/en/1/1f/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg",
+        "Dortmund": "https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg",
+        "Lakers": "https://upload.wikimedia.org/wikipedia/en/3/3c/Los_Angeles_Lakers_logo.svg",
+        "Heat": "https://upload.wikimedia.org/wikipedia/en/f/fb/Miami_Heat_logo.svg",
+        "Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
+        "Warriors": "https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg",
+        "Inter Miami": "https://upload.wikimedia.org/wikipedia/en/5/5f/Inter_Miami_CF_logo.svg",
+        "LAFC": "https://upload.wikimedia.org/wikipedia/en/2/28/Los_Angeles_FC_logo.svg",
+      };
+
+      const leagueLogoOverrides = {
+        "Primera División": "https://upload.wikimedia.org/wikipedia/en/7/76/Primera_Divisi%C3%B3n_de_Chile_logo.png",
+        "Premier League": "https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg",
+        "Champions League": "https://upload.wikimedia.org/wikipedia/en/b/bf/UEFA_Champions_League_logo_2.svg",
+        "LaLiga": "https://upload.wikimedia.org/wikipedia/en/3/3f/LaLiga.svg",
+        "Serie A": "https://upload.wikimedia.org/wikipedia/en/e/e1/Serie_A_logo_%282019%29.svg",
+        "Bundesliga": "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg",
+        "NBA": "https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg",
+        "MLS": "https://upload.wikimedia.org/wikipedia/commons/7/76/Major_League_Soccer_logo.svg",
+        "Formula 1": "https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg",
+      };
+
+      const categoryIconOverrides = {
+        "Fútbol": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Soccerball.svg",
+        "Basket": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png",
+        "Tenis": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Tennis_ball.svg",
+        "MMA": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Boxing_gloves_icon.svg",
+        "Esports": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Controller_icon.svg",
+        "F1": "https://upload.wikimedia.org/wikipedia/commons/8/84/Formula_One_car_icon.svg",
+      };
+
+      const resolveTeamLogo = (teamName, fallback) =>
+        teamLogoOverrides[teamName] || fallback || "/demo/assets/icons/ball.svg";
+
+      const resolveLeagueLogo = (leagueName, fallback) =>
+        leagueLogoOverrides[leagueName] || fallback || "/demo/assets/icons/ball.svg";
+
+      const resolveCategoryIcon = (category, fallback) =>
+        categoryIconOverrides[category] || fallback || getCategoryFallbackIcon(category);
+
       const useCorsProxy = location.hostname.includes("vercel.app");
       const buildSportsDbUrl = (path) =>
         useCorsProxy
@@ -2700,18 +2753,18 @@
           }
           card.innerHTML = `
             <div class="market-visual" style="display:flex;align-items:center;justify-content:center;">
-              <img src="${market.icon || getCategoryFallbackIcon(market.category)}" data-category="${market.category}" alt="icono" width="36" height="36" />
+              <img src="${resolveCategoryIcon(market.category, market.icon)}" data-category="${market.category}" alt="icono" width="36" height="36" />
             </div>
             <h4>${market.title}</h4>
             <div class="row" style="gap:8px;">
               ${
                 market.homeLogo
-                  ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  ? `<img src="${resolveTeamLogo(sides?.[0], market.homeLogo)}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
                   : ""
               }
               ${
                 market.awayLogo
-                  ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  ? `<img src="${resolveTeamLogo(sides?.[1], market.awayLogo)}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
                   : ""
               }
             </div>
@@ -2719,11 +2772,11 @@
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[0], market.homeLogo)}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[1], market.awayLogo)}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -2775,11 +2828,11 @@
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[0], market.homeLogo)}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[1], market.awayLogo)}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -2811,7 +2864,7 @@
           tile.className = "league-tile";
           const liveCount = liveData.filter((item) => item.category === league.name).length;
           tile.innerHTML = `
-            <img src="${league.logo || "/demo/assets/icons/ball.svg"}" alt="logo" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+            <img src="${resolveLeagueLogo(league.name, league.logo)}" alt="logo" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
             <div class="meta">
               <strong>${league.name}</strong>
               <span>${league.count} mercados</span>
@@ -2898,12 +2951,12 @@
             <div class="row" style="gap:8px;">
               ${
                 market.homeLogo
-                  ? `<img src="${market.homeLogo}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  ? `<img src="${resolveTeamLogo(sides?.[0], market.homeLogo)}" alt="home" width="26" height="26" data-team="${sides?.[0] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
                   : ""
               }
               ${
                 market.awayLogo
-                  ? `<img src="${market.awayLogo}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
+                  ? `<img src="${resolveTeamLogo(sides?.[1], market.awayLogo)}" alt="away" width="26" height="26" data-team="${sides?.[1] || ""}" onerror="this.src='/demo/assets/icons/ball.svg'" />`
                   : ""
               }
             </div>
@@ -2911,11 +2964,11 @@
               sides
                 ? `<div class="participant-row">
                     <span class="participant-chip">
-                      <img src="${market.homeLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[0], market.homeLogo)}" alt="logo" data-team="${sides[0]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[0]}
                     </span>
                     <span class="participant-chip">
-                      <img src="${market.awayLogo || "/demo/assets/icons/ball.svg"}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+                      <img src="${resolveTeamLogo(sides[1], market.awayLogo)}" alt="logo" data-team="${sides[1]}" onerror="this.src='/demo/assets/icons/ball.svg'" />
                       ${sides[1]}
                     </span>
                   </div>`
@@ -3295,7 +3348,7 @@
           item.type = "button";
           item.innerHTML = `
             <div class="row" style="align-items:center;gap:8px;">
-              <img src="${league.logo || "/demo/assets/logos/liga-primera.svg"}" alt="logo" width="20" height="20" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
+              <img src="${resolveLeagueLogo(league.name, league.logo || "/demo/assets/logos/liga-primera.svg")}" alt="logo" width="20" height="20" data-league="${league.name}" onerror="this.src='/demo/assets/icons/ball.svg'" />
               ${league.name}
             </div>
             <span>${league.count}</span>
