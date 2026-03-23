@@ -2894,6 +2894,8 @@
             renderFixtures();
             renderDayAccordion();
             renderDayLeagueAccordion();
+            renderLeagueAccordion();
+            renderRoundAccordion();
             renderStandings();
           };
           topLeagues.appendChild(tile);
@@ -3007,13 +3009,7 @@
       };
 
       const renderFixtures = () => {
-        let data =
-          selectedLeague === "all"
-            ? fixturesData
-            : fixturesData.filter((item) => item.league === selectedLeague);
-        if (selectedDay !== "all") {
-          data = data.filter((item) => item.day === selectedDay);
-        }
+        const data = getFilteredFixtures();
         fixtures.innerHTML = "";
         data.forEach((item) => {
           const card = document.createElement("div");
@@ -3055,8 +3051,21 @@
         });
       };
 
+      const getLeagueFilteredFixtures = () =>
+        selectedLeague === "all"
+          ? fixturesData
+          : fixturesData.filter((item) => item.league === selectedLeague);
+
+      const getFilteredFixtures = () => {
+        let data = getLeagueFilteredFixtures();
+        if (selectedDay !== "all") {
+          data = data.filter((item) => item.day === selectedDay);
+        }
+        return data;
+      };
+
       const renderLeagueAccordion = () => {
-        const grouped = fixturesData.reduce((acc, item) => {
+        const grouped = getFilteredFixtures().reduce((acc, item) => {
           acc[item.league] = acc[item.league] || [];
           acc[item.league].push(item);
           return acc;
@@ -3090,7 +3099,11 @@
       };
 
       const renderDayTabs = () => {
-        const days = ["all", ...new Set(fixturesData.map((item) => item.day))];
+        const data = getLeagueFilteredFixtures();
+        const days = ["all", ...new Set(data.map((item) => item.day))];
+        if (!days.includes(selectedDay)) {
+          selectedDay = "all";
+        }
         dayTabs.innerHTML = "";
         days.forEach((day) => {
           const tab = document.createElement("div");
@@ -3100,13 +3113,17 @@
             selectedDay = day;
             renderDayTabs();
             renderFixtures();
+            renderDayAccordion();
+            renderDayLeagueAccordion();
+            renderLeagueAccordion();
+            renderRoundAccordion();
           };
           dayTabs.appendChild(tab);
         });
       };
 
       const renderDayAccordion = () => {
-        const grouped = fixturesData.reduce((acc, item) => {
+        const grouped = getFilteredFixtures().reduce((acc, item) => {
           acc[item.day] = acc[item.day] || [];
           acc[item.day].push(item);
           return acc;
@@ -3140,7 +3157,7 @@
       };
 
       const renderDayLeagueAccordion = () => {
-        const grouped = fixturesData.reduce((acc, item) => {
+        const grouped = getFilteredFixtures().reduce((acc, item) => {
           acc[item.day] = acc[item.day] || {};
           acc[item.day][item.league] = acc[item.day][item.league] || [];
           acc[item.day][item.league].push(item);
@@ -3222,7 +3239,7 @@
       };
 
       const renderRoundAccordion = () => {
-        const grouped = fixturesData.reduce((acc, item) => {
+        const grouped = getFilteredFixtures().reduce((acc, item) => {
           const rounds = roundMap[item.league] || ["Jornada"];
           const round = rounds[0];
           acc[round] = acc[round] || [];
@@ -3293,8 +3310,14 @@
           tab.textContent = league === "all" ? "Todas" : league;
           tab.onclick = () => {
             selectedLeague = league;
+            selectedDay = "all";
             renderLeagueTabs();
+            renderDayTabs();
             renderFixtures();
+            renderDayAccordion();
+            renderDayLeagueAccordion();
+            renderLeagueAccordion();
+            renderRoundAccordion();
             renderStandings();
           };
           leagueTabs.appendChild(tab);
@@ -3377,6 +3400,8 @@
             renderFixtures();
             renderDayAccordion();
             renderDayLeagueAccordion();
+            renderLeagueAccordion();
+            renderRoundAccordion();
           };
           leagueList.appendChild(item);
         });
@@ -3488,6 +3513,8 @@
             renderFixtures();
             renderDayAccordion();
             renderDayLeagueAccordion();
+            renderLeagueAccordion();
+            renderRoundAccordion();
           };
           sportsGrid.appendChild(card);
         });
